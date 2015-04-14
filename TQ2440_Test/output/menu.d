@@ -1,0 +1,10 @@
+.\output\menu.o: src\menu.c
+.\output\menu.o: C:\Keil\ARM\RV31\INC\string.h
+.\output\menu.o: C:\Keil\ARM\RV31\INC\stdlib.h
+.\output\menu.o: .\inc\def.h
+.\output\menu.o: .\inc\option.h
+.\output\menu.o: .\inc\2440addr.h
+.\output\menu.o: .\inc\2440lib.h
+.\output\menu.o: .\inc\2440slib.h
+.\output\menu.o: .\inc\menu.h
+.\output\menu.o: .\inc\LCD_TFT.h

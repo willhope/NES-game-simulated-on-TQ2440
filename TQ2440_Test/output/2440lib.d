@@ -1,0 +1,13 @@
+.\output\2440lib.o: src\2440lib.c
+.\output\2440lib.o: .\inc\def.h
+.\output\2440lib.o: .\inc\option.h
+.\output\2440lib.o: .\inc\2440addr.h
+.\output\2440lib.o: .\inc\2440lib.h
+.\output\2440lib.o: .\inc\2440slib.h
+.\output\2440lib.o: ..\..\m4toarm\InfoNES.h
+.\output\2440lib.o: ..\..\m4toarm\InfoNES_Types.h
+.\output\2440lib.o: C:\Keil\ARM\RV31\INC\stdarg.h
+.\output\2440lib.o: C:\Keil\ARM\RV31\INC\string.h
+.\output\2440lib.o: C:\Keil\ARM\RV31\INC\stdlib.h
+.\output\2440lib.o: C:\Keil\ARM\RV31\INC\stdio.h
+.\output\2440lib.o: C:\Keil\ARM\RV31\INC\ctype.h

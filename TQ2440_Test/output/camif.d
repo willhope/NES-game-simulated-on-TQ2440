@@ -1,0 +1,9 @@
+.\output\camif.o: src\camif.c
+.\output\camif.o: .\inc\def.h
+.\output\camif.o: .\inc\option.h
+.\output\camif.o: .\inc\2440addr.h
+.\output\camif.o: .\inc\2440lib.h
+.\output\camif.o: .\inc\camif.h
+.\output\camif.o: .\inc\camdef.h
+.\output\camif.o: .\inc\camproset.h
+.\output\camif.o: .\inc\LCD_TFT.h

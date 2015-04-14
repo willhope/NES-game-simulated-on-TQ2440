@@ -1,0 +1,11 @@
+.\output\profile.o: src\profile.c
+.\output\profile.o: .\inc\def.h
+.\output\profile.o: .\inc\option.h
+.\output\profile.o: .\inc\2440addr.h
+.\output\profile.o: .\inc\2440lib.h
+.\output\profile.o: .\inc\2440slib.h
+.\output\profile.o: C:\Keil\ARM\RV31\INC\stdarg.h
+.\output\profile.o: C:\Keil\ARM\RV31\INC\string.h
+.\output\profile.o: C:\Keil\ARM\RV31\INC\stdlib.h
+.\output\profile.o: C:\Keil\ARM\RV31\INC\stdio.h
+.\output\profile.o: C:\Keil\ARM\RV31\INC\ctype.h

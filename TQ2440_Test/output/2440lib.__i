@@ -1,0 +1,1 @@
+-c --cpu ARM920T -g -O0 -I.\inc -I..\..\m4toarm -I.\fatfs -I "C:\Keil\ARM\CMSIS\Include" -I "C:\Keil\ARM\INC\Samsung" -o ".\output\2440lib.o" --omf_browse ".\output\2440lib.crf" --depend ".\output\2440lib.d" "src\2440lib.c"

@@ -1,0 +1,4094 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;=========================================
+    2 00000000         ; NAME: 2440INIT.S
+    3 00000000         ; DESC: C start up codes
+    4 00000000         ;       Configure memory, ISR ,stacks
+    5 00000000         ; Initialize C-variables
+    6 00000000         ;=========================================
+    7 00000000         
+    8 00000000                 GET              option.inc
+    1 00000000         ;===========================================
+    2 00000000         ; NAME: OPTION.A
+    3 00000000         ; DESC: Configuration options for .S files
+    4 00000000         ;===========================================
+    5 00000000         
+    6 00000000         ;Start address of each stacks,
+    7 00000000 33FF8000 
+                       _STACK_BASEADDRESS
+                               EQU              0x33ff8000
+    8 00000000 33FF8000 
+                       _MMUTT_STARTADDRESS
+                               EQU              0x33ff8000
+    9 00000000 33FFFF00 
+                       _ISR_STARTADDRESS
+                               EQU              0x33ffff00
+   10 00000000         
+   11 00000000                 GBLL             PLL_ON_START
+   12 00000000 TRUE     
+                       PLL_ON_START
+                               SETL             {TRUE}
+   13 00000000         
+   14 00000000         
+   15 00000000                 GBLL             ENDIAN_CHANGE
+   16 00000000 FALSE    
+                       ENDIAN_CHANGE
+                               SETL             {FALSE}
+   17 00000000         
+   18 00000000                 GBLA             ENTRY_BUS_WIDTH
+   19 00000000 00000010 
+                       ENTRY_BUS_WIDTH
+                               SETA             16
+   20 00000000         
+   21 00000000         
+   22 00000000         ;BUSWIDTH = 16,32
+   23 00000000                 GBLA             BUSWIDTH    ;max. bus width for
+                                                             the GPIO configura
+                                                            tion
+   24 00000000 00000020 
+                       BUSWIDTH
+                               SETA             32
+   25 00000000         
+   26 00000000                 GBLA             UCLK
+   27 00000000 02DC6C00 
+                       UCLK    SETA             48000000
+   28 00000000         
+   29 00000000                 GBLA             XTAL_SEL
+   30 00000000                 GBLA             FCLK
+   31 00000000                 GBLA             CPU_SEL
+   32 00000000         
+   33 00000000         ;(1) Select CPU  
+   34 00000000 01EEFEC1 
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                       CPU_SEL SETA             32440001    ; 32440001:2440A
+   35 00000000         
+   36 00000000         ;(2) Select XTaL
+   37 00000000 00B71B00 
+                       XTAL_SEL
+                               SETA             12000000    ;Fin = 12.0MHz
+   38 00000000         ;XTAL_SEL SETA 16934400
+   39 00000000         
+   40 00000000         ;(3) Select FCLK
+   41 00000000         ;FCLK  SETA 304000000
+   42 00000000         ;FCLK  SETA 296352000
+   43 00000000         ;FCLK  SETA 271500000
+   44 00000000         ;FCLK  SETA 100000000 
+   45 00000000         ;FCLK  SETA 200000000 
+   46 00000000 17D78400 
+                       FCLK    SETA             400000000
+   47 00000000         
+   48 00000000         
+   49 00000000         ;(4) Select Clock Division (Fclk:Hclk:Pclk)
+   50 00000000         ;FCLK = 100000000
+   51 00000000         ;CLKDIV_VAL EQU 1 ; 0=1:1:1, 1=1:1:2, 2=1:2:2, 3=1:2:4, 
+                       4=1:4:4, 5=1:4:8, 6=1:3:3, 7=1:3:6.
+   52 00000000         ;FCLK = 200000000
+   53 00000000         ;CLKDIV_VAL EQU 3 ; 0=1:1:1, 1=1:1:2, 2=1:2:2, 3=1:2:4, 
+                       4=1:4:4, 5=1:4:8, 6=1:3:3, 7=1:3:6.
+   54 00000000         ;FCLK = 400000000
+   55 00000000 00000005 
+                       CLKDIV_VAL
+                               EQU              5           ; 0=1:1:1, 1=1:1:2,
+                                                             2=1:2:2, 3=1:2:4, 
+                                                            4=1:4:4, 5=1:4:8, 6
+                                                            =1:3:3, 7=1:3:6.
+   56 00000000         ;FCLK = 304000000 or 271500000
+   57 00000000         ;CLKDIV_VAL EQU 7 ; 0=1:1:1, 1=1:1:2, 2=1:2:2, 3=1:2:4, 
+                       4=1:4:4, 5=1:4:8, 6=1:3:3, 7=1:3:6.
+   58 00000000         
+   59 00000000                 [                XTAL_SEL = 12000000
+   60 00000000         
+   61 00000000                 [                FCLK = 271500000
+   69                          ]
+   70 00000000         
+   71 00000000                 [                FCLK = 304000000
+   79                          ]
+   80 00000000         
+   81 00000000                 [                FCLK = 100000000
+   89                          ]
+   90 00000000         
+   91 00000000                 [                FCLK = 200000000
+   99                          ]
+  100 00000000         
+  101 00000000                 [                FCLK = 400000000
+  102 00000000 0000005C 
+                       M_MDIV  EQU              92          ;Fin=12.0MHz Fout=4
+                                                            00MHz
+  103 00000000 00000001 
+                       M_PDIV  EQU              1
+  104 00000000                 [                CPU_SEL = 32440001
+  105 00000000 00000001 
+                       M_SDIV  EQU              1           ; 2440A
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+  106 00000000                 |
+  108                          ]
+  109 00000000                 ]
+  110 00000000         
+  111 00000000                 [                UCLK = 48000000
+  112 00000000 00000038 
+                       U_MDIV  EQU              56          ;Fin=12.0MHz Fout=4
+                                                            8MHz
+  113 00000000 00000002 
+                       U_PDIV  EQU              2
+  114 00000000                 [                CPU_SEL = 32440001
+  115 00000000 00000002 
+                       U_SDIV  EQU              2           ; 2440A
+  116 00000000                 |
+  118                          ]
+  119 00000000                 ]
+  120 00000000                 [                UCLK = 96000000
+  129                          ]
+  130 00000000         
+  131 00000000                 |                            ; else if XTAL_SEL 
+                                                            = 16.9344Mhz
+  181                          ]                            ; end of if XTAL_SE
+                                                            L = 12000000.
+  182 00000000         
+  183 00000000         
+  184 00000000         
+  185 00000000         
+  186 00000000                 END
+    9 00000000                 GET              memcfg.inc
+    1 00000000         ;************************************************
+    2 00000000         ; NAME    : MEMCFG.A
+    3 00000000         ; DESC   : Memory bank configuration file
+    4 00000000         ; Revision: 1.0
+    5 00000000         ;************************************************
+    6 00000000         
+    7 00000000         ;Memory Area
+    8 00000000         ;GCS6 32bit(64MB) SDRAM(0x3000_0000-0x33ff_ffff)
+    9 00000000         
+   10 00000000         
+   11 00000000         ;BWSCON
+   12 00000000 00000000 
+                       DW8     EQU              (0x0)
+   13 00000000 00000001 
+                       DW16    EQU              (0x1)
+   14 00000000 00000002 
+                       DW32    EQU              (0x2)
+   15 00000000 00000004 
+                       WAIT    EQU              (0x1<<2)
+   16 00000000 00000008 
+                       UBLB    EQU              (0x1<<3)
+   17 00000000         
+   18 00000000                 ASSERT           :DEF:BUSWIDTH
+   19 00000000                 [                BUSWIDTH=16
+   28 00000000 00000001 
+                       B1_BWSCON
+                               EQU              (DW16)      ; AMD flash(AM29LV1
+                                                            60DB), 16-bit,  for
+                                                             nCS1
+   29 00000000 00000001 
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+                       B2_BWSCON
+                               EQU              (DW16)      ; PCMCIA(PD6710), 1
+                                                            6-bit
+   30 00000000 00000001 
+                       B3_BWSCON
+                               EQU              (DW16)      ; Ethernet(CS8900),
+                                                             16-bit
+   31 00000000 00000002 
+                       B4_BWSCON
+                               EQU              (DW32)      ; Intel Strata(28F1
+                                                            28), 32-bit, for nC
+                                                            S4
+   32 00000000 00000001 
+                       B5_BWSCON
+                               EQU              (DW16)      ; A400/A410 Ext, 16
+                                                            -bit
+   33 00000000 00000002 
+                       B6_BWSCON
+                               EQU              (DW32)      ; SDRAM(K4S561632C)
+                                                             32MBx2, 32-bit
+   34 00000000 00000002 
+                       B7_BWSCON
+                               EQU              (DW32)      ; N.C.
+   35 00000000                 ]
+   36 00000000         
+   37 00000000         ;BANK0CON
+   38 00000000         
+   39 00000000 00000003 
+                       B0_Tacs EQU              0x3         ;0clk
+   40 00000000 00000003 
+                       B0_Tcos EQU              0x3         ;0clk
+   41 00000000 00000007 
+                       B0_Tacc EQU              0x7         ;14clk
+   42 00000000 00000003 
+                       B0_Tcoh EQU              0x3         ;0clk
+   43 00000000 00000003 
+                       B0_Tah  EQU              0x3         ;0clk
+   44 00000000 00000001 
+                       B0_Tacp EQU              0x1
+   45 00000000 00000000 
+                       B0_PMC  EQU              0x0         ;normal
+   46 00000000         
+   47 00000000         ;BANK1CON
+   48 00000000 00000001 
+                       B1_Tacs EQU              1           ;0x0 ;0clk
+   49 00000000 00000001 
+                       B1_Tcos EQU              1           ;0x0 ;0clk
+   50 00000000 00000006 
+                       B1_Tacc EQU              6           ;0x7 ;14clk
+   51 00000000 00000001 
+                       B1_Tcoh EQU              1           ;0x0 ;0clk
+   52 00000000 00000001 
+                       B1_Tah  EQU              1           ;0x0 ;0clk
+   53 00000000 00000000 
+                       B1_Tacp EQU              0x0
+   54 00000000 00000000 
+                       B1_PMC  EQU              0x0         ;normal
+   55 00000000         
+   56 00000000         ;Bank 2 parameter
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+   57 00000000 00000001 
+                       B2_Tacs EQU              1           ;0x0 ;0clk
+   58 00000000 00000001 
+                       B2_Tcos EQU              1           ;0x0 ;0clk
+   59 00000000 00000006 
+                       B2_Tacc EQU              6           ;0x7 ;14clk
+   60 00000000 00000001 
+                       B2_Tcoh EQU              1           ;0x0 ;0clk
+   61 00000000 00000001 
+                       B2_Tah  EQU              1           ;0x0 ;0clk
+   62 00000000 00000000 
+                       B2_Tacp EQU              0x0
+   63 00000000 00000000 
+                       B2_PMC  EQU              0x0         ;normal
+   64 00000000         
+   65 00000000         ;Bank 3 parameter
+   66 00000000 00000001 
+                       B3_Tacs EQU              0x1         ;0 ;0clk
+   67 00000000 00000001 
+                       B3_Tcos EQU              0x1         ;0 ;0clk
+   68 00000000 00000006 
+                       B3_Tacc EQU              0x6         ;7 ;14clk
+   69 00000000 00000001 
+                       B3_Tcoh EQU              0x1         ;0 ;0clk
+   70 00000000 00000001 
+                       B3_Tah  EQU              0x1         ;0 ;0clk
+   71 00000000 00000000 
+                       B3_Tacp EQU              0x0
+   72 00000000 00000000 
+                       B3_PMC  EQU              0x0         ;normal
+   73 00000000         
+   74 00000000         ;Bank 4 parameter
+   75 00000000 00000001 
+                       B4_Tacs EQU              0x1         ;0 ;0clk
+   76 00000000 00000001 
+                       B4_Tcos EQU              0x1         ;0 ;0clk
+   77 00000000 00000006 
+                       B4_Tacc EQU              0x6         ;7 ;14clk
+   78 00000000 00000001 
+                       B4_Tcoh EQU              0x1         ;0 ;0clk
+   79 00000000 00000001 
+                       B4_Tah  EQU              0x1         ;0 ;0clk
+   80 00000000 00000000 
+                       B4_Tacp EQU              0x0
+   81 00000000 00000000 
+                       B4_PMC  EQU              0x0         ;normal
+   82 00000000         
+   83 00000000         ;Bank 5 parameter
+   84 00000000 00000001 
+                       B5_Tacs EQU              0x1         ;0 ;0clk
+   85 00000000 00000001 
+                       B5_Tcos EQU              0x1         ;0 ;0clk
+   86 00000000 00000006 
+                       B5_Tacc EQU              0x6         ;7 ;14clk
+   87 00000000 00000001 
+                       B5_Tcoh EQU              0x1         ;0 ;0clk
+   88 00000000 00000001 
+                       B5_Tah  EQU              0x1         ;0 ;0clk
+   89 00000000 00000000 
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+                       B5_Tacp EQU              0x0
+   90 00000000 00000000 
+                       B5_PMC  EQU              0x0         ;normal
+   91 00000000         
+   92 00000000                 [                {TRUE}      ; When 100MHz HCLK 
+                                                            is used.
+   93 00000000         ;Bank 6 parameter
+   94 00000000 00000003 
+                       B6_MT   EQU              0x3         ;SDRAM
+   95 00000000 00000001 
+                       B6_Trcd EQU              0x1         ;3clk
+   96 00000000 00000001 
+                       B6_SCAN EQU              0x1         ;9bit
+   97 00000000         
+   98 00000000         ;Bank 7 parameter
+   99 00000000 00000003 
+                       B7_MT   EQU              0x3         ;SDRAM
+  100 00000000 00000001 
+                       B7_Trcd EQU              0x1         ;3clk
+  101 00000000 00000001 
+                       B7_SCAN EQU              0x1         ;9bit
+  102 00000000         
+  103 00000000         ;REFRESH parameter
+  104 00000000 00000001 
+                       REFEN   EQU              0x1         ;Refresh enable
+  105 00000000 00000000 
+                       TREFMD  EQU              0x0         ;CBR(CAS before RAS
+                                                            )/Auto refresh
+  106 00000000 00000001 
+                       Trp     EQU              0x1         ;3clk
+  107 00000000 00000001 
+                       Tsrc    EQU              0x1         ;5clk Trc= Trp(3)+T
+                                                            src(5) = 8clock
+  108 00000000 00000002 
+                       Tchr    EQU              0x2         ;3clk
+  109 00000000 000004F4 
+                       REFCNT  EQU              1268        ;1463;1268 ;HCLK=10
+                                                            5Mhz, (2048+1-7.81*
+                                                            100);75M->1463
+  110 00000000         
+  111 00000000                 |
+  130                          ]
+  131 00000000         
+  132 00000000                 END
+   10 00000000                 GET              2440addr.inc
+    1 00000000         ;=======================================================
+                       =============
+    2 00000000         ; File Name : 2440addr.a
+    3 00000000         ; Function  : TQ2440 Define Address Register (Assembly)
+    4 00000000         ; Revision  : 1.0
+    5 00000000         ;=======================================================
+                       =============
+    6 00000000         
+    7 00000000                 GBLL             BIG_ENDIAN__
+    8 00000000 FALSE    
+                       BIG_ENDIAN__
+                               SETL             {FALSE}
+    9 00000000         
+   10 00000000         ;=================
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+   11 00000000         ; Memory control
+   12 00000000         ;=================
+   13 00000000 48000000 
+                       BWSCON  EQU              0x48000000  ;Bus width & wait s
+                                                            tatus
+   14 00000000 48000004 
+                       BANKCON0
+                               EQU              0x48000004  ;Boot ROM control
+   15 00000000 48000008 
+                       BANKCON1
+                               EQU              0x48000008  ;BANK1 control
+   16 00000000 4800000C 
+                       BANKCON2
+                               EQU              0x4800000c  ;BANK2 control
+   17 00000000 48000010 
+                       BANKCON3
+                               EQU              0x48000010  ;BANK3 control
+   18 00000000 48000014 
+                       BANKCON4
+                               EQU              0x48000014  ;BANK4 control
+   19 00000000 48000018 
+                       BANKCON5
+                               EQU              0x48000018  ;BANK5 control
+   20 00000000 4800001C 
+                       BANKCON6
+                               EQU              0x4800001c  ;BANK6 control
+   21 00000000 48000020 
+                       BANKCON7
+                               EQU              0x48000020  ;BANK7 control
+   22 00000000 48000024 
+                       REFRESH EQU              0x48000024  ;DRAM/SDRAM refresh
+                                                            
+   23 00000000 48000028 
+                       BANKSIZE
+                               EQU              0x48000028  ;Flexible Bank Size
+                                                            
+   24 00000000 4800002C 
+                       MRSRB6  EQU              0x4800002c  ;Mode register set 
+                                                            for SDRAM Bank6
+   25 00000000 48000030 
+                       MRSRB7  EQU              0x48000030  ;Mode register set 
+                                                            for SDRAM Bank7
+   26 00000000         
+   27 00000000         
+   28 00000000         ;==========================
+   29 00000000         ; CLOCK & POWER MANAGEMENT
+   30 00000000         ;==========================
+   31 00000000 4C000000 
+                       LOCKTIME
+                               EQU              0x4c000000  ;PLL lock time coun
+                                                            ter
+   32 00000000 4C000004 
+                       MPLLCON EQU              0x4c000004  ;MPLL Control
+   33 00000000 4C000008 
+                       UPLLCON EQU              0x4c000008  ;UPLL Control
+   34 00000000 4C00000C 
+                       CLKCON  EQU              0x4c00000c  ;Clock generator co
+                                                            ntrol
+   35 00000000 4C000010 
+
+
+
+ARM Macro Assembler    Page 8 
+
+
+                       CLKSLOW EQU              0x4c000010  ;Slow clock control
+                                                            
+   36 00000000 4C000014 
+                       CLKDIVN EQU              0x4c000014  ;Clock divider cont
+                                                            rol
+   37 00000000         
+   38 00000000         
+   39 00000000         ;=================
+   40 00000000         ; INTERRUPT
+   41 00000000         ;=================
+   42 00000000 4A000000 
+                       SRCPND  EQU              0x4a000000  ;Interrupt request 
+                                                            status
+   43 00000000 4A000004 
+                       INTMOD  EQU              0x4a000004  ;Interrupt mode con
+                                                            trol
+   44 00000000 4A000008 
+                       INTMSK  EQU              0x4a000008  ;Interrupt mask con
+                                                            trol
+   45 00000000 4A00000C 
+                       PRIORITY
+                               EQU              0x4a00000c  ;IRQ priority contr
+                                                            ol           <-- Ma
+                                                            y 06, 2002 SOP
+   46 00000000 4A000010 
+                       INTPND  EQU              0x4a000010  ;Interrupt request 
+                                                            status
+   47 00000000 4A000014 
+                       INTOFFSET
+                               EQU              0x4a000014  ;Interruot request 
+                                                            source offset
+   48 00000000 4A000018 
+                       SUSSRCPND
+                               EQU              0x4a000018  ;Sub source pending
+                                                            
+   49 00000000 4A00001C 
+                       INTSUBMSK
+                               EQU              0x4a00001c  ;Interrupt sub mask
+                                                            
+   50 00000000         
+   51 00000000         
+   52 00000000         ;=================
+   53 00000000         ; I/O PORT for LED
+   54 00000000         ;=================
+   55 00000000 56000050 
+                       GPFCON  EQU              0x56000050  ;Port F control
+   56 00000000 56000054 
+                       GPFDAT  EQU              0x56000054  ;Port F data
+   57 00000000 56000058 
+                       GPFUP   EQU              0x56000058  ;Pull-up control F
+   58 00000000         
+   59 00000000         ;Miscellaneous register
+   60 00000000 56000080 
+                       MISCCR  EQU              0x56000080  ;Miscellaneous cont
+                                                            rol
+   61 00000000 56000084 
+                       DCKCON  EQU              0x56000084  ;DCLK0/1 control
+   62 00000000 56000088 
+                       EXTINT0 EQU              0x56000088  ;External interrupt
+
+
+
+ARM Macro Assembler    Page 9 
+
+
+                                                             control register 0
+                                                            
+   63 00000000 5600008C 
+                       EXTINT1 EQU              0x5600008c  ;External interrupt
+                                                             control register 1
+                                                            
+   64 00000000 56000090 
+                       EXTINT2 EQU              0x56000090  ;External interrupt
+                                                             control register 2
+                                                            
+   65 00000000 56000094 
+                       EINTFLT0
+                               EQU              0x56000094  ;Reserved
+   66 00000000 56000098 
+                       EINTFLT1
+                               EQU              0x56000098  ;Reserved
+   67 00000000 5600009C 
+                       EINTFLT2
+                               EQU              0x5600009c  ;External interrupt
+                                                             filter control reg
+                                                            ister 2
+   68 00000000 560000A0 
+                       EINTFLT3
+                               EQU              0x560000a0  ;External interrupt
+                                                             filter control reg
+                                                            ister 3
+   69 00000000 560000A4 
+                       EINTMASK
+                               EQU              0x560000a4  ;External interrupt
+                                                             mask
+   70 00000000 560000A8 
+                       EINTPEND
+                               EQU              0x560000a8  ;External interrupt
+                                                             pending
+   71 00000000 560000AC 
+                       GSTATUS0
+                               EQU              0x560000ac  ;External pin statu
+                                                            s
+   72 00000000 560000B0 
+                       GSTATUS1
+                               EQU              0x560000b0  ;Chip ID(0x32440000
+                                                            )
+   73 00000000 560000B4 
+                       GSTATUS2
+                               EQU              0x560000b4  ;Reset type
+   74 00000000 560000B8 
+                       GSTATUS3
+                               EQU              0x560000b8  ;Saved data0(32-bit
+                                                            ) before entering P
+                                                            OWER_OFF mode
+   75 00000000 560000BC 
+                       GSTATUS4
+                               EQU              0x560000bc  ;Saved data1(32-bit
+                                                            ) before entering P
+                                                            OWER_OFF mode
+   76 00000000         
+   77 00000000         ;Added for 2440     ; DonGo
+   78 00000000 560000CC 
+                       MSLCON  EQU              0x560000cc  ;Memory sleep contr
+
+
+
+ARM Macro Assembler    Page 10 
+
+
+                                                            ol register
+   79 00000000         
+   80 00000000         ;=================
+   81 00000000         ; WATCH DOG TIMER
+   82 00000000         ;=================
+   83 00000000 53000000 
+                       WTCON   EQU              0x53000000  ;Watch-dog timer mo
+                                                            de
+   84 00000000 53000004 
+                       WTDAT   EQU              0x53000004  ;Watch-dog timer da
+                                                            ta
+   85 00000000 53000008 
+                       WTCNT   EQU              0x53000008  ;Eatch-dog timer co
+                                                            unt
+   86 00000000         
+   87 00000000         ;=================
+   88 00000000         ; Nand Flash
+   89 00000000         ;=================
+   90 00000000 4E000000 
+                       NFCONF  EQU              0x4E000000  ;NAND Flash configu
+                                                            ration
+   91 00000000 4E000004 
+                       NFCONT  EQU              0x4E000004  ;NAND Flash control
+                                                            
+   92 00000000 4E000008 
+                       NFCMD   EQU              0x4E000008  ;NAND Flash command
+                                                            
+   93 00000000 4E00000C 
+                       NFADDR  EQU              0x4E00000C  ;NAND Flash address
+                                                            
+   94 00000000 4E000010 
+                       NFDATA  EQU              0x4E000010  ;NAND Flash data
+   95 00000000 4E000010 
+                       NFDATA8 EQU              0x4E000010  ;NAND Flash data
+   96 00000000 4E000014 
+                       NFMECCD0
+                               EQU              0x4E000014  ;NAND Flash ECC for
+                                                             Main Area
+   97 00000000 4E000018 
+                       NFMECCD1
+                               EQU              0x4E000018
+   98 00000000 4E00001C 
+                       NFSECCD EQU              0x4E00001C  ;NAND Flash ECC for
+                                                             Spare Area
+   99 00000000 4E000020 
+                       NFSTAT  EQU              0x4E000020  ;NAND Flash operati
+                                                            on status
+  100 00000000 4E000024 
+                       NFESTAT0
+                               EQU              0x4E000024
+  101 00000000 4E000028 
+                       NFESTAT1
+                               EQU              0x4E000028
+  102 00000000 4E00002C 
+                       NFMECC0 EQU              0x4E00002C
+  103 00000000 4E000030 
+                       NFMECC1 EQU              0x4E000030
+  104 00000000 4E000034 
+                       NFSECC  EQU              0x4E000034
+
+
+
+ARM Macro Assembler    Page 11 
+
+
+  105 00000000 4E000038 
+                       NFSBLK  EQU              0x4E000038  ;NAND Flash Start b
+                                                            lock address
+  106 00000000 4E00003C 
+                       NFEBLK  EQU              0x4E00003C  ;NAND Flash End blo
+                                                            ck address
+  107 00000000         
+  108 00000000                 END
+   11 00000000         
+   12 00000000 00400000 
+                       BIT_SELFREFRESH
+                               EQU              (1<<22)
+   13 00000000         
+   14 00000000         ;Pre-defined constants
+   15 00000000 00000010 
+                       USERMODE
+                               EQU              0x10
+   16 00000000 00000011 
+                       FIQMODE EQU              0x11
+   17 00000000 00000012 
+                       IRQMODE EQU              0x12
+   18 00000000 00000013 
+                       SVCMODE EQU              0x13
+   19 00000000 00000017 
+                       ABORTMODE
+                               EQU              0x17
+   20 00000000 0000001B 
+                       UNDEFMODE
+                               EQU              0x1b
+   21 00000000 0000001F 
+                       MODEMASK
+                               EQU              0x1f
+   22 00000000 000000C0 
+                       NOINT   EQU              0xc0
+   23 00000000         
+   24 00000000         ;The location of stacks
+   25 00000000 33FF4800 
+                       UserStack
+                               EQU              (_STACK_BASEADDRESS-0x3800) 
+                                                            ;0x33ff4800 ~
+   26 00000000 33FF5800 
+                       SVCStack
+                               EQU              (_STACK_BASEADDRESS-0x2800) 
+                                                            ;0x33ff5800 ~
+   27 00000000 33FF5C00 
+                       UndefStack
+                               EQU              (_STACK_BASEADDRESS-0x2400) 
+                                                            ;0x33ff5c00 ~
+   28 00000000 33FF6000 
+                       AbortStack
+                               EQU              (_STACK_BASEADDRESS-0x2000) 
+                                                            ;0x33ff6000 ~
+   29 00000000 33FF7000 
+                       IRQStack
+                               EQU              (_STACK_BASEADDRESS-0x1000) 
+                                                            ;0x33ff7000 ~
+   30 00000000 33FF8000 
+                       FIQStack
+                               EQU              (_STACK_BASEADDRESS-0x0) 
+
+
+
+ARM Macro Assembler    Page 12 
+
+
+                                                            ;0x33ff8000 ~
+   31 00000000         
+   32 00000000         ;Check if tasm.exe(armasm -16 ...@ADS 1.0) is used.
+   33 00000000                 GBLL             THUMBCODE
+   34 00000000                 [                {CONFIG} = 16
+   38 00000000 FALSE    
+                       THUMBCODE
+                               SETL             {FALSE}
+   39 00000000                 ]
+   40 00000000         
+   41 00000000                 MACRO
+   42 00000000                 MOV_PC_LR
+   43 00000000                 [                THUMBCODE
+   44 00000000                 bx               lr
+   45 00000000                 |
+   46 00000000                 mov              pc,lr
+   47 00000000                 ]
+   48 00000000                 MEND
+   49 00000000         
+   50 00000000                 MACRO
+   51 00000000                 MOVEQ_PC_LR
+   52 00000000                 [                THUMBCODE
+   53 00000000                 bxeq             lr
+   54 00000000                 |
+   55 00000000                 moveq            pc,lr
+   56 00000000                 ]
+   57 00000000                 MEND
+   58 00000000         
+   59 00000000                 MACRO
+   60 00000000         $HandlerLabel
+                               HANDLER          $HandleLabel
+   61 00000000         
+   62 00000000         $HandlerLabel
+   63 00000000                 sub              sp,sp,#4    ;decrement sp(to st
+                                                            ore jump address)
+   64 00000000                 stmfd            sp!,{r0}    ;PUSH the work regi
+                                                            ster to stack(lr do
+                                                            es not push because
+                                                             it return to origi
+                                                            nal address)
+   65 00000000                 ldr              r0,=$HandleLabel ;load the addr
+                                                            ess of HandleXXX to
+                                                             r0
+   66 00000000                 ldr              r0,[r0]     ;load the contents(
+                                                            service routine sta
+                                                            rt address) of Hand
+                                                            leXXX
+   67 00000000                 str              r0,[sp,#4]  ;store the contents
+                                                            (ISR) of HandleXXX 
+                                                            to stack
+   68 00000000                 ldmfd            sp!,{r0,pc} ;POP the work regis
+                                                            ter and pc(jump to 
+                                                            ISR)
+   69 00000000                 MEND
+   70 00000000         
+   71 00000000                 IMPORT           |Image$$ER_ROM1$$RO$$Base| 
+                                                            ; Base of ROM code 
+                                                            
+   72 00000000                 IMPORT           |Image$$ER_ROM1$$RO$$Limit| ; E
+
+
+
+ARM Macro Assembler    Page 13 
+
+
+                                                            nd of ROM code (=st
+                                                            art of ROM data) 
+   73 00000000                 IMPORT           |Image$$RW_RAM1$$RW$$Base| ; Ba
+                                                            se of RAM to initia
+                                                            lise 
+   74 00000000                 IMPORT           |Image$$RW_RAM1$$ZI$$Base| ; Ba
+                                                            se and limit of are
+                                                            a 
+   75 00000000                 IMPORT           |Image$$RW_RAM1$$ZI$$Limit| ; t
+                                                            o zero initialise 
+   76 00000000         
+   77 00000000                 IMPORT           MMU_SetAsyncBusMode
+   78 00000000                 IMPORT           MMU_SetFastBusMode ;
+   79 00000000         
+   80 00000000                 IMPORT           Main        ; The main entry of
+                                                             mon program
+   81 00000000                 IMPORT           RdNF2SDRAM  ; Copy Image from N
+                                                            and Flash to SDRAM
+   82 00000000         
+   83 00000000                 AREA             RESET,CODE,READONLY
+   84 00000000                 PRESERVE8                    ;8 ×Ö¶ÔÆë 
+   85 00000000         
+   86 00000000                 ENTRY
+   87 00000000         
+   88 00000000                 EXPORT           __ENTRY
+   89 00000000         __ENTRY
+   90 00000000         ResetEntry
+   91 00000000         ;1)The code, which converts to Big-endian, should be in 
+                       little endian code.
+   92 00000000         ;2)The following little endian code will be compiled in 
+                       Big-Endian mode.
+   93 00000000         ;  The code byte order should be changed as the memory b
+                       us width.
+   94 00000000         ;3)The pseudo instruction,DCD can not be used here becau
+                       se the linker generates error.
+   95 00000000                 ASSERT           :DEF:ENDIAN_CHANGE
+   96 00000000                 [                ENDIAN_CHANGE
+  110 00000000 EA000045        b                ResetHandler
+  111 00000004                 ]
+  112 00000004 EA00001B        b                HandlerUndef ;handler for Undef
+                                                            ined mode
+  113 00000008 EA000020        b                HandlerSWI  ;handler for SWI in
+                                                            terrupt
+  114 0000000C EA00002B        b                HandlerPabort 
+                                                            ;handler for PAbort
+                                                            
+  115 00000010 EA000024        b                HandlerDabort 
+                                                            ;handler for DAbort
+                                                            
+  116 00000014 EAFFFFFE        b                .           ;reserved
+  117 00000018 EA000010        b                HandlerIRQ  ;handler for IRQ in
+                                                            terrupt
+  118 0000001C EA000009        b                HandlerFIQ  ;handler for FIQ in
+                                                            terrupt
+  119 00000020         
+  120 00000020         ;@0x20
+  121 00000020 EA0000EA        b                EnterPWDN   ; Must be @0x20.
+  122 00000024         ChangeBigEndian
+  123 00000024         ;@0x24
+
+
+
+ARM Macro Assembler    Page 14 
+
+
+  124 00000024                 [                ENTRY_BUS_WIDTH=32
+  128                          ]
+  129 00000024                 [                ENTRY_BUS_WIDTH=16
+  130 00000024 0F10EE11        DCD              0x0f10ee11
+  131 00000028 0080E380        DCD              0x0080e380
+  132 0000002C 0F10EE01        DCD              0x0f10ee01
+  133 00000030                 ]
+  134 00000030                 [                ENTRY_BUS_WIDTH=8
+  138                          ]
+  139 00000030 FFFFFFFF        DCD              0xffffffff  ;swinv 0xffffff is 
+                                                            similar with NOP an
+                                                            d run well in both 
+                                                            endian mode.
+  140 00000034 FFFFFFFF        DCD              0xffffffff
+  141 00000038 FFFFFFFF        DCD              0xffffffff
+  142 0000003C FFFFFFFF        DCD              0xffffffff
+  143 00000040 FFFFFFFF        DCD              0xffffffff
+  144 00000044 EA000034        b                ResetHandler
+  145 00000048         
+  146 00000048         HandlerFIQ
+                               HANDLER          HandleFIQ
+   61 00000048         
+   62 00000048         HandlerFIQ
+   63 00000048 E24DD004        sub              sp,sp,#4    ;decrement sp(to st
+                                                            ore jump address)
+   64 0000004C E92D0001        stmfd            sp!,{r0}    ;PUSH the work regi
+                                                            ster to stack(lr do
+                                                            es not push because
+                                                             it return to origi
+                                                            nal address)
+   65 00000050 E59F00A4        ldr              r0,=HandleFIQ ;load the address
+                                                             of HandleXXX to r0
+                                                            
+   66 00000054 E5900000        ldr              r0,[r0]     ;load the contents(
+                                                            service routine sta
+                                                            rt address) of Hand
+                                                            leXXX
+   67 00000058 E58D0004        str              r0,[sp,#4]  ;store the contents
+                                                            (ISR) of HandleXXX 
+                                                            to stack
+   68 0000005C E8BD8001        ldmfd            sp!,{r0,pc} ;POP the work regis
+                                                            ter and pc(jump to 
+                                                            ISR)
+  147 00000060         HandlerIRQ
+                               HANDLER          HandleIRQ
+   61 00000060         
+   62 00000060         HandlerIRQ
+   63 00000060 E24DD004        sub              sp,sp,#4    ;decrement sp(to st
+                                                            ore jump address)
+   64 00000064 E92D0001        stmfd            sp!,{r0}    ;PUSH the work regi
+                                                            ster to stack(lr do
+                                                            es not push because
+                                                             it return to origi
+                                                            nal address)
+   65 00000068 E59F0090        ldr              r0,=HandleIRQ ;load the address
+                                                             of HandleXXX to r0
+                                                            
+   66 0000006C E5900000        ldr              r0,[r0]     ;load the contents(
+                                                            service routine sta
+
+
+
+ARM Macro Assembler    Page 15 
+
+
+                                                            rt address) of Hand
+                                                            leXXX
+   67 00000070 E58D0004        str              r0,[sp,#4]  ;store the contents
+                                                            (ISR) of HandleXXX 
+                                                            to stack
+   68 00000074 E8BD8001        ldmfd            sp!,{r0,pc} ;POP the work regis
+                                                            ter and pc(jump to 
+                                                            ISR)
+  148 00000078         HandlerUndef
+                               HANDLER          HandleUndef
+   61 00000078         
+   62 00000078         HandlerUndef
+   63 00000078 E24DD004        sub              sp,sp,#4    ;decrement sp(to st
+                                                            ore jump address)
+   64 0000007C E92D0001        stmfd            sp!,{r0}    ;PUSH the work regi
+                                                            ster to stack(lr do
+                                                            es not push because
+                                                             it return to origi
+                                                            nal address)
+   65 00000080 E59F007C        ldr              r0,=HandleUndef ;load the addre
+                                                            ss of HandleXXX to 
+                                                            r0
+   66 00000084 E5900000        ldr              r0,[r0]     ;load the contents(
+                                                            service routine sta
+                                                            rt address) of Hand
+                                                            leXXX
+   67 00000088 E58D0004        str              r0,[sp,#4]  ;store the contents
+                                                            (ISR) of HandleXXX 
+                                                            to stack
+   68 0000008C E8BD8001        ldmfd            sp!,{r0,pc} ;POP the work regis
+                                                            ter and pc(jump to 
+                                                            ISR)
+  149 00000090         HandlerSWI
+                               HANDLER          HandleSWI
+   61 00000090         
+   62 00000090         HandlerSWI
+   63 00000090 E24DD004        sub              sp,sp,#4    ;decrement sp(to st
+                                                            ore jump address)
+   64 00000094 E92D0001        stmfd            sp!,{r0}    ;PUSH the work regi
+                                                            ster to stack(lr do
+                                                            es not push because
+                                                             it return to origi
+                                                            nal address)
+   65 00000098 E59F0068        ldr              r0,=HandleSWI ;load the address
+                                                             of HandleXXX to r0
+                                                            
+   66 0000009C E5900000        ldr              r0,[r0]     ;load the contents(
+                                                            service routine sta
+                                                            rt address) of Hand
+                                                            leXXX
+   67 000000A0 E58D0004        str              r0,[sp,#4]  ;store the contents
+                                                            (ISR) of HandleXXX 
+                                                            to stack
+   68 000000A4 E8BD8001        ldmfd            sp!,{r0,pc} ;POP the work regis
+                                                            ter and pc(jump to 
+                                                            ISR)
+  150 000000A8         HandlerDabort
+                               HANDLER          HandleDabort
+   61 000000A8         
+
+
+
+ARM Macro Assembler    Page 16 
+
+
+   62 000000A8         HandlerDabort
+   63 000000A8 E24DD004        sub              sp,sp,#4    ;decrement sp(to st
+                                                            ore jump address)
+   64 000000AC E92D0001        stmfd            sp!,{r0}    ;PUSH the work regi
+                                                            ster to stack(lr do
+                                                            es not push because
+                                                             it return to origi
+                                                            nal address)
+   65 000000B0 E59F0054        ldr              r0,=HandleDabort ;load the addr
+                                                            ess of HandleXXX to
+                                                             r0
+   66 000000B4 E5900000        ldr              r0,[r0]     ;load the contents(
+                                                            service routine sta
+                                                            rt address) of Hand
+                                                            leXXX
+   67 000000B8 E58D0004        str              r0,[sp,#4]  ;store the contents
+                                                            (ISR) of HandleXXX 
+                                                            to stack
+   68 000000BC E8BD8001        ldmfd            sp!,{r0,pc} ;POP the work regis
+                                                            ter and pc(jump to 
+                                                            ISR)
+  151 000000C0         HandlerPabort
+                               HANDLER          HandlePabort
+   61 000000C0         
+   62 000000C0         HandlerPabort
+   63 000000C0 E24DD004        sub              sp,sp,#4    ;decrement sp(to st
+                                                            ore jump address)
+   64 000000C4 E92D0001        stmfd            sp!,{r0}    ;PUSH the work regi
+                                                            ster to stack(lr do
+                                                            es not push because
+                                                             it return to origi
+                                                            nal address)
+   65 000000C8 E59F0040        ldr              r0,=HandlePabort ;load the addr
+                                                            ess of HandleXXX to
+                                                             r0
+   66 000000CC E5900000        ldr              r0,[r0]     ;load the contents(
+                                                            service routine sta
+                                                            rt address) of Hand
+                                                            leXXX
+   67 000000D0 E58D0004        str              r0,[sp,#4]  ;store the contents
+                                                            (ISR) of HandleXXX 
+                                                            to stack
+   68 000000D4 E8BD8001        ldmfd            sp!,{r0,pc} ;POP the work regis
+                                                            ter and pc(jump to 
+                                                            ISR)
+  152 000000D8         
+  153 000000D8         IsrIRQ
+  154 000000D8 E24DD004        sub              sp,sp,#4    ;reserved for PC
+  155 000000DC E92D0300        stmfd            sp!,{r8-r9}
+  156 000000E0         
+  157 000000E0 E59F902C        ldr              r9,=INTOFFSET
+  158 000000E4 E5999000        ldr              r9,[r9]
+  159 000000E8 E59F8028        ldr              r8,=HandleEINT0
+  160 000000EC E0888109        add              r8,r8,r9,lsl #2
+  161 000000F0 E5988000        ldr              r8,[r8]
+  162 000000F4 E58D8008        str              r8,[sp,#8]
+  163 000000F8 E8BD8300        ldmfd            sp!,{r8-r9,pc}
+  164 000000FC         
+  165 000000FC         
+
+
+
+ARM Macro Assembler    Page 17 
+
+
+  166 000000FC 33FFFF1C 
+              33FFFF18 
+              33FFFF04 
+              33FFFF08 
+              33FFFF10 
+              33FFFF0C 
+              4A000014 
+              33FFFF20         LTORG
+  167 0000011C         
+  168 0000011C         ;=======
+  169 0000011C         ; ENTRY
+  170 0000011C         ;=======
+  171 0000011C         ResetHandler
+  172 0000011C E3A00453        ldr              r0,=WTCON   ;watch dog disable
+  173 00000120 E3A01000        ldr              r1,=0x0
+  174 00000124 E5801000        str              r1,[r0]
+  175 00000128         
+  176 00000128 E59F01F8        ldr              r0,=INTMSK
+  177 0000012C E59F11F8        ldr              r1,=0xffffffff ;all interrupt d
+                                                            isable
+  178 00000130 E5801000        str              r1,[r0]
+  179 00000134         
+  180 00000134 E59F01F4        ldr              r0,=INTSUBMSK
+  181 00000138 E59F11F4        ldr              r1,=0x7fff  ;all sub interrupt 
+                                                            disable
+  182 0000013C E5801000        str              r1,[r0]
+  183 00000140         
+  184 00000140                 [                {FALSE}
+  193                          ]
+  194 00000140         
+  195 00000140         ;To reduce PLL lock time, adjust the LOCKTIME register.
+  196 00000140 E3A00313        ldr              r0,=LOCKTIME
+  197 00000144 E59F11EC        ldr              r1,=0xffffff
+  198 00000148 E5801000        str              r1,[r0]
+  199 0000014C         
+  200 0000014C                 [                PLL_ON_START
+  201 0000014C         ; Added for confirm clock divide. for 2440.
+  202 0000014C         ; Setting value Fclk:Hclk:Pclk
+  203 0000014C E59F01E8        ldr              r0,=CLKDIVN
+  204 00000150 E3A01005        ldr              r1,=CLKDIV_VAL ; 0=1:1:1, 1=1:1
+                                                            :2, 2=1:2:2, 3=1:2:
+                                                            4, 4=1:4:4, 5=1:4:8
+                                                            , 6=1:3:3, 7=1:3:6.
+                                                            
+  205 00000154 E5801000        str              r1,[r0]
+  206 00000158         
+  207 00000158         ;program has not been copied, so use these directly
+  208 00000158                 [                CLKDIV_VAL>1 ; means Fclk:Hclk 
+                                                            is not 1:1.
+  209 00000158 EE110F10        mrc              p15,0,r0,c1,c0,0
+  210 0000015C E3800103        orr              r0,r0,#0xc0000000 
+                                                            ;R1_nF:OR:R1_iA
+  211 00000160 EE010F10        mcr              p15,0,r0,c1,c0,0
+  212 00000164                 |
+  216                          ]
+  217 00000164         
+  218 00000164         ;Configure UPLL
+  219 00000164 E59F01D4        ldr              r0,=UPLLCON
+  220 00000168 E59F11D4        ldr              r1,=((U_MDIV<<12)+(U_PDIV<<4)+U
+
+
+
+ARM Macro Assembler    Page 18 
+
+
+_SDIV) 
+                                                            ;Fin = 12.0MHz, UCL
+                                                            K = 48MHz
+  221 0000016C E5801000        str              r1,[r0]
+  222 00000170 E1A00000        nop                          ; Caution: After UP
+                                                            LL setting, at leas
+                                                            t 7-clocks delay mu
+                                                            st be inserted for 
+                                                            setting hardware be
+                                                             completed.
+  223 00000174 E1A00000        nop
+  224 00000178 E1A00000        nop
+  225 0000017C E1A00000        nop
+  226 00000180 E1A00000        nop
+  227 00000184 E1A00000        nop
+  228 00000188 E1A00000        nop
+  229 0000018C         ;Configure MPLL
+  230 0000018C E59F01B4        ldr              r0,=MPLLCON
+  231 00000190 E59F11B4        ldr              r1,=((M_MDIV<<12)+(M_PDIV<<4)+M
+_SDIV) 
+                                                            ;Fin = 12.0MHz, FCL
+                                                            K = 400MHz
+  232 00000194 E5801000        str              r1,[r0]
+  233 00000198                 ]
+  234 00000198         
+  235 00000198         ;Check if the boot is caused by the wake-up from SLEEP m
+                       ode.
+  236 00000198 E59F11B0        ldr              r1,=GSTATUS2
+  237 0000019C E5910000        ldr              r0,[r1]
+  238 000001A0 E3100002        tst              r0,#0x2
+  239 000001A4         ;In case of the wake-up from SLEEP mode, go to SLEEP_WAK
+                       EUP handler.
+  240 000001A4 1A0000AA        bne              WAKEUP_SLEEP
+  241 000001A8         
+  242 000001A8                 EXPORT           StartPointAfterSleepWakeUp
+  243 000001A8         StartPointAfterSleepWakeUp
+  244 000001A8         
+  245 000001A8         ;Set memory control registers
+  246 000001A8 E28F0C01 
+              E28000D8         adrl             r0,SMRDATA
+  247 000001B0 E3A01312        ldr              r1,=BWSCON  ;BWSCON Address
+  248 000001B4 E2802034        add              r2, r0, #52 ;End address of SMR
+                                                            DATA
+  249 000001B8         
+  250 000001B8         0
+  251 000001B8 E4903004        ldr              r3, [r0], #4
+  252 000001BC E4813004        str              r3, [r1], #4
+  253 000001C0 E1520000        cmp              r2, r0
+  254 000001C4 1AFFFFFB        bne              %B0
+  255 000001C8         
+  256 000001C8         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  257 000001C8         ;;;;;;;;;;;;;       When EINT0 is pressed,  Clear SDRAM 
+                       
+  258 000001C8         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  259 000001C8         ; check if EIN0 button is pressed
+  260 000001C8         
+  261 000001C8 E59F0184        ldr              r0,=GPFCON
+
+
+
+ARM Macro Assembler    Page 19 
+
+
+  262 000001CC E3A01000        ldr              r1,=0x0
+  263 000001D0 E5801000        str              r1,[r0]
+  264 000001D4 E59F017C        ldr              r0,=GPFUP
+  265 000001D8 E3A010FF        ldr              r1,=0xff
+  266 000001DC E5801000        str              r1,[r0]
+  267 000001E0         
+  268 000001E0 E59F1174        ldr              r1,=GPFDAT
+  269 000001E4 E5910000        ldr              r0,[r1]
+  270 000001E8 E3C0003C        bic              r0,r0,#(0x1e<<1) ; bit clear
+  271 000001EC E3100001        tst              r0,#0x1
+  272 000001F0 1A000012        bne              %F1
+  273 000001F4         
+  274 000001F4         
+  275 000001F4         
+  276 000001F4         ; Clear SDRAM Start
+  277 000001F4         
+  278 000001F4 E59F0158        ldr              r0,=GPFCON
+  279 000001F8 E59F1160        ldr              r1,=0x55aa
+  280 000001FC E5801000        str              r1,[r0]
+  281 00000200 E59F0154        ldr              r0,=GPFDAT
+  282 00000204 E3A01000        ldr              r1,=0x0
+  283 00000208 E5801000        str              r1,[r0]     ;LED=****
+  284 0000020C         
+  285 0000020C E3A01000        mov              r1,#0
+  286 00000210 E3A02000        mov              r2,#0
+  287 00000214 E3A03000        mov              r3,#0
+  288 00000218 E3A04000        mov              r4,#0
+  289 0000021C E3A05000        mov              r5,#0
+  290 00000220 E3A06000        mov              r6,#0
+  291 00000224 E3A07000        mov              r7,#0
+  292 00000228 E3A08000        mov              r8,#0
+  293 0000022C         
+  294 0000022C E3A09301        ldr              r9,=0x4000000 ;64MB
+  295 00000230 E3A00203        ldr              r0,=0x30000000
+  296 00000234         0
+  297 00000234 E8A001FE        stmia            r0!,{r1-r8}
+  298 00000238 E2599020        subs             r9,r9,#32
+  299 0000023C 1AFFFFFC        bne              %B0
+  300 00000240         
+  301 00000240         ;Clear SDRAM End
+  302 00000240         
+  303 00000240         1
+  304 00000240         
+  305 00000240         ;Initialize stacks
+  306 00000240 EB000025        bl               InitStacks
+  307 00000244         
+  308 00000244         ;=======================================================
+                       ====
+  309 00000244         
+  310 00000244 E3A00312        ldr              r0, =BWSCON
+  311 00000248 E5900000        ldr              r0, [r0]
+  312 0000024C E2100006        ands             r0, r0, #6  ;OM[1:0] != 0, NOR 
+                                                            FLash boot
+  313 00000250 1A000004        bne              copy_proc_beg ;do not read nand
+                                                             flash
+  314 00000254 E24F0F97        adr              r0, ResetEntry ;OM[1:0] == 0, N
+                                                            AND FLash boot
+  315 00000258 E3500000        cmp              r0, #0      ;if use Multi-ice, 
+                                                            
+
+
+
+ARM Macro Assembler    Page 20 
+
+
+  316 0000025C 1A000001        bne              copy_proc_beg ;do not read nand
+                                                             flash for boot
+  317 00000260         ;nop
+  318 00000260         ;=======================================================
+                       ====
+  319 00000260         nand_boot_beg
+  320 00000260                 [                {TRUE}
+  321 00000260 EBFFFFFE        bl               RdNF2SDRAM
+  322 00000264                 ]
+  323 00000264         
+  324 00000264 E59FF0F8        ldr              pc, =copy_proc_beg
+  325 00000268         ;=======================================================
+                       ====
+  326 00000268         copy_proc_beg
+  327 00000268 E24F0E27        adr              r0, ResetEntry
+  328 0000026C E59F2148        ldr              r2, BaseOfROM
+  329 00000270 E1500002        cmp              r0, r2
+  330 00000274 059F0144        ldreq            r0, TopOfROM
+  331 00000278 0A000006        beq              InitRam
+  332 0000027C E59F313C        ldr              r3, TopOfROM
+  333 00000280         0
+  334 00000280 E8B000F0        ldmia            r0!, {r4-r7}
+  335 00000284 E8A200F0        stmia            r2!, {r4-r7}
+  336 00000288 E1520003        cmp              r2, r3
+  337 0000028C 3AFFFFFB        bcc              %B0
+  338 00000290         
+  339 00000290 E0422003        sub              r2, r2, r3
+  340 00000294 E0400002        sub              r0, r0, r2
+  341 00000298         
+  342 00000298         InitRam
+  343 00000298 E59F2124        ldr              r2, BaseOfBSS
+  344 0000029C E59F3124        ldr              r3, BaseOfZero
+  345 000002A0         0
+  346 000002A0 E1520003        cmp              r2, r3
+  347 000002A4 34901004        ldrcc            r1, [r0], #4
+  348 000002A8 34821004        strcc            r1, [r2], #4
+  349 000002AC 3AFFFFFB        bcc              %B0
+  350 000002B0         
+  351 000002B0 E3A00000        mov              r0, #0
+  352 000002B4 E59F3110        ldr              r3, EndOfBSS
+  353 000002B8         1
+  354 000002B8 E1520003        cmp              r2, r3
+  355 000002BC 34820004        strcc            r0, [r2], #4
+  356 000002C0 3AFFFFFC        bcc              %B1
+  357 000002C4         
+  358 000002C4 E59FF09C        ldr              pc, =%F2    ;goto compiler addr
+                                                            ess
+  359 000002C8         2
+  360 000002C8         
+  361 000002C8         ; [ CLKDIV_VAL>1   ; means Fclk:Hclk is not 1:1.
+  362 000002C8         ; bl MMU_SetAsyncBusMode
+  363 000002C8         ; |
+  364 000002C8         ; bl MMU_SetFastBusMode ; default value.
+  365 000002C8         ; ]
+  366 000002C8         
+  367 000002C8         
+  368 000002C8         ;=======================================================
+                       ====
+  369 000002C8         ; Setup IRQ handler
+
+
+
+ARM Macro Assembler    Page 21 
+
+
+  370 000002C8 E51F01D0        ldr              r0,=HandleIRQ ;This routine is 
+                                                            needed
+  371 000002CC E59F109C        ldr              r1,=IsrIRQ  ;if there is not 's
+                                                            ubs pc,lr,#4' at 0x
+                                                            18, 0x1c
+  372 000002D0 E5801000        str              r1,[r0]
+  373 000002D4         
+  374 000002D4         
+  375 000002D4                 [                :LNOT:THUMBCODE
+  376 000002D4 EBFFFFFE        bl               Main        ;Do not use main() 
+                                                            because ......
+  377 000002D8 EAFFFFFE        b                .
+  378 000002DC                 ]
+  379 000002DC         
+  380 000002DC                 [                THUMBCODE   ;for start-up code 
+                                                            for Thumb mode
+  387                          ]
+  388 000002DC         
+  389 000002DC         
+  390 000002DC         ;function initializing stacks
+  391 000002DC         InitStacks
+  392 000002DC         ;Do not use DRAM,such as stmfd,ldmfd......
+  393 000002DC         ;SVCstack is initialized before
+  394 000002DC         ;Under toolkit ver 2.5, 'msr cpsr,r1' can be used instea
+                       d of 'msr cpsr_cxsf,r1'
+  395 000002DC E10F0000        mrs              r0,cpsr
+  396 000002E0 E3C0001F        bic              r0,r0,#MODEMASK
+  397 000002E4 E38010DB        orr              r1,r0,#UNDEFMODE|NOINT
+  398 000002E8 E12FF001        msr              cpsr_cxsf,r1 ;UndefMode
+  399 000002EC E59FD080        ldr              sp,=UndefStack ; UndefStack=0x3
+                                                            3FF_5C00
+  400 000002F0         
+  401 000002F0 E38010D7        orr              r1,r0,#ABORTMODE|NOINT
+  402 000002F4 E12FF001        msr              cpsr_cxsf,r1 ;AbortMode
+  403 000002F8 E59FD078        ldr              sp,=AbortStack ; AbortStack=0x3
+                                                            3FF_6000
+  404 000002FC         
+  405 000002FC E38010D2        orr              r1,r0,#IRQMODE|NOINT
+  406 00000300 E12FF001        msr              cpsr_cxsf,r1 ;IRQMode
+  407 00000304 E59FD070        ldr              sp,=IRQStack ; IRQStack=0x33FF_
+                                                            7000
+  408 00000308         
+  409 00000308 E38010D1        orr              r1,r0,#FIQMODE|NOINT
+  410 0000030C E12FF001        msr              cpsr_cxsf,r1 ;FIQMode
+  411 00000310 E59FD068        ldr              sp,=FIQStack ; FIQStack=0x33FF_
+                                                            8000
+  412 00000314         
+  413 00000314 E3C000DF        bic              r0,r0,#MODEMASK|NOINT
+  414 00000318 E3801013        orr              r1,r0,#SVCMODE
+  415 0000031C E12FF001        msr              cpsr_cxsf,r1 ;SVCMode
+  416 00000320 E59FD05C        ldr              sp,=SVCStack ; SVCStack=0x33FF_
+                                                            5800
+  417 00000324         
+  418 00000324         ;USER mode has not be initialized.
+  419 00000324         
+  420 00000324 E1A0F00E        mov              pc,lr
+  421 00000328         ;The LR register will not be valid if the current mode i
+                       s not SVC mode.
+  422 00000328         
+
+
+
+ARM Macro Assembler    Page 22 
+
+
+  423 00000328         
+  424 00000328 4A000008 
+              FFFFFFFF 
+              4A00001C 
+              00007FFF 
+              00FFFFFF 
+              4C000014 
+              4C000008 
+              00038022 
+              4C000004 
+              0005C011 
+              560000B4 
+              56000050 
+              56000058 
+              56000054 
+              000055AA 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              33FF5C00 
+              33FF6000 
+              33FF7000 
+              33FF8000 
+              33FF5800         LTORG
+  425 00000388         
+  426 00000388         SMRDATA DATA
+  427 00000388         ; Memory configuration should be optimized for best perf
+                       ormance
+  428 00000388         ; The following parameter is not optimized.
+  429 00000388         ; Memory access cycle parameter strategy
+  430 00000388         ; 1) The memory settings is  safe parameters even at HCL
+                       K=75Mhz.
+  431 00000388         ; 2) SDRAM refresh period is for HCLK<=75Mhz.
+  432 00000388         
+  433 00000388 22121110        DCD              (0+(B1_BWSCON<<4)+(B2_BWSCON<<8
+)+(B3_BWSCON<<12)+(B4_BWSCON<<16)+(B5_BWSCON<<20)+(B6_BWSCON<<24)+(B7_BWSCON<<2
+8))
+  434 0000038C 00007FF4        DCD              ((B0_Tacs<<13)+(B0_Tcos<<11)+(B
+0_Tacc<<8)+(B0_Tcoh<<6)+(B0_Tah<<4)+(B0_Tacp<<2)+(B0_PMC)) 
+                                                            ;GCS0
+  435 00000390 00002E50        DCD              ((B1_Tacs<<13)+(B1_Tcos<<11)+(B
+1_Tacc<<8)+(B1_Tcoh<<6)+(B1_Tah<<4)+(B1_Tacp<<2)+(B1_PMC)) 
+                                                            ;GCS1
+  436 00000394 00002E50        DCD              ((B2_Tacs<<13)+(B2_Tcos<<11)+(B
+2_Tacc<<8)+(B2_Tcoh<<6)+(B2_Tah<<4)+(B2_Tacp<<2)+(B2_PMC)) 
+                                                            ;GCS2
+  437 00000398 00002E50        DCD              ((B3_Tacs<<13)+(B3_Tcos<<11)+(B
+3_Tacc<<8)+(B3_Tcoh<<6)+(B3_Tah<<4)+(B3_Tacp<<2)+(B3_PMC)) 
+                                                            ;GCS3
+  438 0000039C 00002E50        DCD              ((B4_Tacs<<13)+(B4_Tcos<<11)+(B
+4_Tacc<<8)+(B4_Tcoh<<6)+(B4_Tah<<4)+(B4_Tacp<<2)+(B4_PMC)) 
+                                                            ;GCS4
+  439 000003A0 00002E50        DCD              ((B5_Tacs<<13)+(B5_Tcos<<11)+(B
+5_Tacc<<8)+(B5_Tcoh<<6)+(B5_Tah<<4)+(B5_Tacp<<2)+(B5_PMC)) 
+                                                            ;GCS5
+  440 000003A4 00018005        DCD              ((B6_MT<<15)+(B6_Trcd<<2)+(B6_S
+CAN)) 
+                                                            ;GCS6
+
+
+
+ARM Macro Assembler    Page 23 
+
+
+  441 000003A8 00018005        DCD              ((B7_MT<<15)+(B7_Trcd<<2)+(B7_S
+CAN)) 
+                                                            ;GCS7
+  442 000003AC 009604F4        DCD              ((REFEN<<23)+(TREFMD<<22)+(Trp<
+<20)+(Tsrc<<18)+(Tchr<<16)+REFCNT)
+  443 000003B0         
+  444 000003B0 00000032        DCD              0x32        ;SCLK power saving 
+                                                            mode, BANKSIZE 128M
+                                                            /128M
+  445 000003B4         
+  446 000003B4 00000030        DCD              0x30        ;MRSR6 CL=3clk
+  447 000003B8 00000030        DCD              0x30        ;MRSR7 CL=3clk
+  448 000003BC         
+  449 000003BC 00000000 
+                       BaseOfROM
+                               DCD              |Image$$ER_ROM1$$RO$$Base|
+  450 000003C0 00000000 
+                       TopOfROM
+                               DCD              |Image$$ER_ROM1$$RO$$Limit|
+  451 000003C4 00000000 
+                       BaseOfBSS
+                               DCD              |Image$$RW_RAM1$$RW$$Base|
+  452 000003C8 00000000 
+                       BaseOfZero
+                               DCD              |Image$$RW_RAM1$$ZI$$Base|
+  453 000003CC 00000000 
+                       EndOfBSS
+                               DCD              |Image$$RW_RAM1$$ZI$$Limit|
+  454 000003D0         
+  455 000003D0                 ALIGN
+  456 000003D0         
+  457 000003D0         ;Function for entering power down mode
+  458 000003D0         ; 1. SDRAM should be in self-refresh mode.
+  459 000003D0         ; 2. All interrupt should be maksked for SDRAM/DRAM self
+                       -refresh.
+  460 000003D0         ; 3. LCD controller should be disabled for SDRAM/DRAM se
+                       lf-refresh.
+  461 000003D0         ; 4. The I-cache may have to be turned on.
+  462 000003D0         ; 5. The location of the following code may have not to 
+                       be changed.
+  463 000003D0         
+  464 000003D0         ;void EnterPWDN(int CLKCON);
+  465 000003D0         EnterPWDN
+  466 000003D0 E1A02000        mov              r2,r0       ;r2=rCLKCON
+  467 000003D4 E3100008        tst              r0,#0x8     ;SLEEP mode?
+  468 000003D8 1A00000F        bne              ENTER_SLEEP
+  469 000003DC         
+  470 000003DC         ENTER_STOP
+  471 000003DC E59F0154        ldr              r0,=REFRESH
+  472 000003E0 E5903000        ldr              r3,[r0]     ;r3=rREFRESH
+  473 000003E4 E1A01003        mov              r1, r3
+  474 000003E8 E3811501        orr              r1, r1, #BIT_SELFREFRESH
+  475 000003EC E5801000        str              r1, [r0]    ;Enable SDRAM self-
+                                                            refresh
+  476 000003F0         
+  477 000003F0 E3A01010        mov              r1,#16      ;wait until self-re
+                                                            fresh is issued. ma
+                                                            y not be needed.
+  478 000003F4 E2511001 
+
+
+
+ARM Macro Assembler    Page 24 
+
+
+                       0       subs             r1,r1,#1
+  479 000003F8 1AFFFFFD        bne              %B0
+  480 000003FC         
+  481 000003FC E59F0138        ldr              r0,=CLKCON  ;enter STOP mode.
+  482 00000400 E5802000        str              r2,[r0]
+  483 00000404         
+  484 00000404 E3A01020        mov              r1,#32
+  485 00000408 E2511001 
+                       0       subs             r1,r1,#1    ;1) wait until the 
+                                                            STOP mode is in eff
+                                                            ect.
+  486 0000040C 1AFFFFFD        bne              %B0         ;2) Or wait here un
+                                                            til the CPU&Periphe
+                                                            rals will be turned
+                                                            -off
+  487 00000410         ;   Entering SLEEP mode, only the reset by wake-up is av
+                       ailable.
+  488 00000410         
+  489 00000410 E59F0120        ldr              r0,=REFRESH ;exit from SDRAM se
+                                                            lf refresh mode.
+  490 00000414 E5803000        str              r3,[r0]
+  491 00000418         
+  492 00000418                 MOV_PC_LR
+   43 00000418                 [                THUMBCODE
+   46 00000418 E1A0F00E        mov              pc,lr
+   47 0000041C                 ]
+  493 0000041C         
+  494 0000041C         ENTER_SLEEP
+  495 0000041C         ;NOTE.
+  496 0000041C         ;1) rGSTATUS3 should have the return address after wake-
+                       up from SLEEP mode.
+  497 0000041C         
+  498 0000041C E59F0114        ldr              r0,=REFRESH
+  499 00000420 E5901000        ldr              r1,[r0]     ;r1=rREFRESH
+  500 00000424 E3811501        orr              r1, r1, #BIT_SELFREFRESH
+  501 00000428 E5801000        str              r1, [r0]    ;Enable SDRAM self-
+                                                            refresh
+  502 0000042C         
+  503 0000042C E3A01010        mov              r1,#16      ;Wait until self-re
+                                                            fresh is issued,whi
+                                                            ch may not be neede
+                                                            d.
+  504 00000430 E2511001 
+                       0       subs             r1,r1,#1
+  505 00000434 1AFFFFFD        bne              %B0
+  506 00000438         
+  507 00000438 E59F1100        ldr              r1,=MISCCR
+  508 0000043C E5910000        ldr              r0,[r1]
+  509 00000440 E380080E        orr              r0,r0,#(7<<17) ;Set SCLK0=0, SC
+                                                            LK1=0, SCKE=0.
+  510 00000444 E5810000        str              r0,[r1]
+  511 00000448         
+  512 00000448 E59F00EC        ldr              r0,=CLKCON  ; Enter sleep mode
+  513 0000044C E5802000        str              r2,[r0]
+  514 00000450         
+  515 00000450 EAFFFFFE        b                .           ;CPU will die here.
+                                                            
+  516 00000454         
+  517 00000454         
+
+
+
+ARM Macro Assembler    Page 25 
+
+
+  518 00000454         WAKEUP_SLEEP
+  519 00000454         ;Release SCLKn after wake-up from the SLEEP mode.
+  520 00000454 E59F10E4        ldr              r1,=MISCCR
+  521 00000458 E5910000        ldr              r0,[r1]
+  522 0000045C E3C0080E        bic              r0,r0,#(7<<17) ;SCLK0:0->SCLK, 
+                                                            SCLK1:0->SCLK, SCKE
+                                                            :0->=SCKE.
+  523 00000460 E5810000        str              r0,[r1]
+  524 00000464         
+  525 00000464         ;Set memory control registers
+  526 00000464 E59F00D8        ldr              r0,=SMRDATA
+  527 00000468 E3A01312        ldr              r1,=BWSCON  ;BWSCON Address
+  528 0000046C E2802034        add              r2, r0, #52 ;End address of SMR
+                                                            DATA
+  529 00000470         0
+  530 00000470 E4903004        ldr              r3, [r0], #4
+  531 00000474 E4813004        str              r3, [r1], #4
+  532 00000478 E1520000        cmp              r2, r0
+  533 0000047C 1AFFFFFB        bne              %B0
+  534 00000480         
+  535 00000480 E3A01C01        mov              r1,#256
+  536 00000484 E2511001 
+                       0       subs             r1,r1,#1    ;1) wait until the 
+                                                            SelfRefresh is rele
+                                                            ased.
+  537 00000488 1AFFFFFD        bne              %B0
+  538 0000048C         
+  539 0000048C E59F10B4        ldr              r1,=GSTATUS3 ;GSTATUS3 has the 
+                                                            start address just 
+                                                            after SLEEP wake-up
+                                                            
+  540 00000490 E5910000        ldr              r0,[r1]
+  541 00000494         
+  542 00000494 E1A0F000        mov              pc,r0
+  543 00000498         
+  544 00000498         ;=======================================================
+                       ==============
+  545 00000498         ; Clock division test
+  546 00000498         ; Assemble code, because VSYNC time is very short
+  547 00000498         ;=======================================================
+                       ==============
+  548 00000498                 EXPORT           CLKDIV124
+  549 00000498                 EXPORT           CLKDIV144
+  550 00000498         
+  551 00000498         CLKDIV124
+  552 00000498         
+  553 00000498 E51F0164        ldr              r0, = CLKDIVN
+  554 0000049C E3A01003        ldr              r1, = 0x3   ; 0x3 = 1:2:4
+  555 000004A0 E5801000        str              r1, [r0]
+  556 000004A4         ; wait until clock is stable
+  557 000004A4 E1A00000        nop
+  558 000004A8 E1A00000        nop
+  559 000004AC E1A00000        nop
+  560 000004B0 E1A00000        nop
+  561 000004B4 E1A00000        nop
+  562 000004B8         
+  563 000004B8 E59F0078        ldr              r0, = REFRESH
+  564 000004BC E5901000        ldr              r1, [r0]
+  565 000004C0 E3C110FF        bic              r1, r1, #0xff
+
+
+
+ARM Macro Assembler    Page 26 
+
+
+  566 000004C4 E3C11C07        bic              r1, r1, #(0x7<<8)
+  567 000004C8 E3811E47        orr              r1, r1, #0x470 ; REFCNT135
+  568 000004CC E5801000        str              r1, [r0]
+  569 000004D0 E1A00000        nop
+  570 000004D4 E1A00000        nop
+  571 000004D8 E1A00000        nop
+  572 000004DC E1A00000        nop
+  573 000004E0 E1A00000        nop
+  574 000004E4 E1A0F00E        mov              pc, lr
+  575 000004E8         
+  576 000004E8         CLKDIV144
+  577 000004E8 E51F01B4        ldr              r0, = CLKDIVN
+  578 000004EC E3A01004        ldr              r1, = 0x4   ; 0x4 = 1:4:4
+  579 000004F0 E5801000        str              r1, [r0]
+  580 000004F4         ; wait until clock is stable
+  581 000004F4 E1A00000        nop
+  582 000004F8 E1A00000        nop
+  583 000004FC E1A00000        nop
+  584 00000500 E1A00000        nop
+  585 00000504 E1A00000        nop
+  586 00000508         
+  587 00000508 E59F0028        ldr              r0, = REFRESH
+  588 0000050C E5901000        ldr              r1, [r0]
+  589 00000510 E3C110FF        bic              r1, r1, #0xff
+  590 00000514 E3C11C07        bic              r1, r1, #(0x7<<8)
+  591 00000518 E3811E63        orr              r1, r1, #0x630 
+                                                            ; REFCNT675 - 1520
+  592 0000051C E5801000        str              r1, [r0]
+  593 00000520 E1A00000        nop
+  594 00000524 E1A00000        nop
+  595 00000528 E1A00000        nop
+  596 0000052C E1A00000        nop
+  597 00000530 E1A00000        nop
+  598 00000534 E1A0F00E        mov              pc, lr
+  599 00000538         
+  600 00000538         
+  601 00000538                 ALIGN
+  602 00000538         
+  603 00000538 48000024 
+              4C00000C 
+              56000080 
+              00000000 
+              560000B8         AREA             RamData, DATA, READWRITE
+  604 00000000         
+  605 00000000                 ^                _ISR_STARTADDRESS ; _ISR_STARTA
+                                                            DDRESS=0x33FF_FF00
+  606 00000000 33FFFF00 
+                       HandleReset
+                               #                4
+  607 00000000 33FFFF04 
+                       HandleUndef
+                               #                4
+  608 00000000 33FFFF08 
+                       HandleSWI
+                               #                4
+  609 00000000 33FFFF0C 
+                       HandlePabort
+                               #                4
+  610 00000000 33FFFF10 
+
+
+
+ARM Macro Assembler    Page 27 
+
+
+                       HandleDabort
+                               #                4
+  611 00000000 33FFFF14 
+                       HandleReserved
+                               #                4
+  612 00000000 33FFFF18 
+                       HandleIRQ
+                               #                4
+  613 00000000 33FFFF1C 
+                       HandleFIQ
+                               #                4
+  614 00000000         
+  615 00000000         ;Do not use the label 'IntVectorTable',
+  616 00000000         ;The value of IntVectorTable is different with the addre
+                       ss you think it may be.
+  617 00000000         ;IntVectorTable
+  618 00000000         ;@0x33FF_FF20
+  619 00000000 33FFFF20 
+                       HandleEINT0
+                               #                4
+  620 00000000 33FFFF24 
+                       HandleEINT1
+                               #                4
+  621 00000000 33FFFF28 
+                       HandleEINT2
+                               #                4
+  622 00000000 33FFFF2C 
+                       HandleEINT3
+                               #                4
+  623 00000000 33FFFF30 
+                       HandleEINT4_7
+                               #                4
+  624 00000000 33FFFF34 
+                       HandleEINT8_23
+                               #                4
+  625 00000000 33FFFF38 
+                       HandleCAM
+                               #                4           ; Added for 2440.
+  626 00000000 33FFFF3C 
+                       HandleBATFLT
+                               #                4
+  627 00000000 33FFFF40 
+                       HandleTICK
+                               #                4
+  628 00000000 33FFFF44 
+                       HandleWDT
+                               #                4
+  629 00000000 33FFFF48 
+                       HandleTIMER0
+                               #                4
+  630 00000000 33FFFF4C 
+                       HandleTIMER1
+                               #                4
+  631 00000000 33FFFF50 
+                       HandleTIMER2
+                               #                4
+  632 00000000 33FFFF54 
+                       HandleTIMER3
+                               #                4
+
+
+
+ARM Macro Assembler    Page 28 
+
+
+  633 00000000 33FFFF58 
+                       HandleTIMER4
+                               #                4
+  634 00000000 33FFFF5C 
+                       HandleUART2
+                               #                4
+  635 00000000         ;@0x33FF_FF60
+  636 00000000 33FFFF60 
+                       HandleLCD
+                               #                4
+  637 00000000 33FFFF64 
+                       HandleDMA0
+                               #                4
+  638 00000000 33FFFF68 
+                       HandleDMA1
+                               #                4
+  639 00000000 33FFFF6C 
+                       HandleDMA2
+                               #                4
+  640 00000000 33FFFF70 
+                       HandleDMA3
+                               #                4
+  641 00000000 33FFFF74 
+                       HandleMMC
+                               #                4
+  642 00000000 33FFFF78 
+                       HandleSPI0
+                               #                4
+  643 00000000 33FFFF7C 
+                       HandleUART1
+                               #                4
+  644 00000000 33FFFF80 
+                       HandleNFCON
+                               #                4           ; Added for 2440.
+  645 00000000 33FFFF84 
+                       HandleUSBD
+                               #                4
+  646 00000000 33FFFF88 
+                       HandleUSBH
+                               #                4
+  647 00000000 33FFFF8C 
+                       HandleIIC
+                               #                4
+  648 00000000 33FFFF90 
+                       HandleUART0
+                               #                4
+  649 00000000 33FFFF94 
+                       HandleSPI1
+                               #                4
+  650 00000000 33FFFF98 
+                       HandleRTC
+                               #                4
+  651 00000000 33FFFF9C 
+                       HandleADC
+                               #                4
+  652 00000000         ;@0x33FF_FFA0
+  653 00000000                 END
+Command Line: --debug --xref --cpu=ARM920T --depend=.\output\2440init.d -o.\out
+put\2440init.o -I.\inc -IC:\Keil\ARM\CMSIS\Include -IC:\Keil\ARM\INC\Samsung --
+
+
+
+ARM Macro Assembler    Page 29 
+
+
+list=.\listing\2440init.lst src\2440init.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+ 000001B8
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 00000234
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 00000280
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 000002A0
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 000003F4
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 00000408
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 00000430
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 00000470
+
+Symbol: 
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 00000484
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 00000240
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 000002B8
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+ 000002C8
+
+Symbol: 
+   Definitions
+      None
+   Uses
+      None
+Warning:  undefinedComment:  unused
+BaseOfBSS 000003C4
+
+Symbol: BaseOfBSS
+   Definitions
+      At line 451 in file src\2440init.s
+   Uses
+      At line 343 in file src\2440init.s
+Comment: BaseOfBSS used once
+BaseOfROM 000003BC
+
+Symbol: BaseOfROM
+   Definitions
+      At line 449 in file src\2440init.s
+   Uses
+      At line 328 in file src\2440init.s
+Comment: BaseOfROM used once
+BaseOfZero 000003C8
+
+Symbol: BaseOfZero
+   Definitions
+      At line 452 in file src\2440init.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 344 in file src\2440init.s
+Comment: BaseOfZero used once
+CLKDIV124 00000498
+
+Symbol: CLKDIV124
+   Definitions
+      At line 551 in file src\2440init.s
+   Uses
+      At line 548 in file src\2440init.s
+Comment: CLKDIV124 used once
+CLKDIV144 000004E8
+
+Symbol: CLKDIV144
+   Definitions
+      At line 576 in file src\2440init.s
+   Uses
+      At line 549 in file src\2440init.s
+Comment: CLKDIV144 used once
+ChangeBigEndian 00000024
+
+Symbol: ChangeBigEndian
+   Definitions
+      At line 122 in file src\2440init.s
+   Uses
+      None
+Comment: ChangeBigEndian unused
+ENTER_SLEEP 0000041C
+
+Symbol: ENTER_SLEEP
+   Definitions
+      At line 494 in file src\2440init.s
+   Uses
+      At line 468 in file src\2440init.s
+Comment: ENTER_SLEEP used once
+ENTER_STOP 000003DC
+
+Symbol: ENTER_STOP
+   Definitions
+      At line 470 in file src\2440init.s
+   Uses
+      None
+Comment: ENTER_STOP unused
+EndOfBSS 000003CC
+
+Symbol: EndOfBSS
+   Definitions
+      At line 453 in file src\2440init.s
+   Uses
+      At line 352 in file src\2440init.s
+Comment: EndOfBSS used once
+EnterPWDN 000003D0
+
+Symbol: EnterPWDN
+   Definitions
+      At line 465 in file src\2440init.s
+   Uses
+      At line 121 in file src\2440init.s
+Comment: EnterPWDN used once
+HandlerDabort 000000A8
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Relocatable symbols
+
+
+Symbol: HandlerDabort
+   Definitions
+      At line 62 in macro ¨ûþ
+      at line 150 in file src\2440init.s
+   Uses
+      At line 115 in file src\2440init.s
+Comment: HandlerDabort used once
+HandlerFIQ 00000048
+
+Symbol: HandlerFIQ
+   Definitions
+      At line 62 in macro ¨ûþ
+      at line 146 in file src\2440init.s
+   Uses
+      At line 118 in file src\2440init.s
+Comment: HandlerFIQ used once
+HandlerIRQ 00000060
+
+Symbol: HandlerIRQ
+   Definitions
+      At line 62 in macro ¨ûþ
+      at line 147 in file src\2440init.s
+   Uses
+      At line 117 in file src\2440init.s
+Comment: HandlerIRQ used once
+HandlerPabort 000000C0
+
+Symbol: HandlerPabort
+   Definitions
+      At line 62 in macro ¨ûþ
+      at line 151 in file src\2440init.s
+   Uses
+      At line 114 in file src\2440init.s
+Comment: HandlerPabort used once
+HandlerSWI 00000090
+
+Symbol: HandlerSWI
+   Definitions
+      At line 62 in macro ¨ûþ
+      at line 149 in file src\2440init.s
+   Uses
+      At line 113 in file src\2440init.s
+Comment: HandlerSWI used once
+HandlerUndef 00000078
+
+Symbol: HandlerUndef
+   Definitions
+      At line 62 in macro ¨ûþ
+      at line 148 in file src\2440init.s
+   Uses
+      At line 112 in file src\2440init.s
+Comment: HandlerUndef used once
+InitRam 00000298
+
+Symbol: InitRam
+   Definitions
+      At line 342 in file src\2440init.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 5 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 331 in file src\2440init.s
+Comment: InitRam used once
+InitStacks 000002DC
+
+Symbol: InitStacks
+   Definitions
+      At line 391 in file src\2440init.s
+   Uses
+      At line 306 in file src\2440init.s
+Comment: InitStacks used once
+IsrIRQ 000000D8
+
+Symbol: IsrIRQ
+   Definitions
+      At line 153 in file src\2440init.s
+   Uses
+      At line 371 in file src\2440init.s
+Comment: IsrIRQ used once
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 83 in file src\2440init.s
+   Uses
+      None
+Comment: RESET unused
+ResetEntry 00000000
+
+Symbol: ResetEntry
+   Definitions
+      At line 90 in file src\2440init.s
+   Uses
+      At line 314 in file src\2440init.s
+      At line 327 in file src\2440init.s
+
+ResetHandler 0000011C
+
+Symbol: ResetHandler
+   Definitions
+      At line 171 in file src\2440init.s
+   Uses
+      At line 110 in file src\2440init.s
+      At line 144 in file src\2440init.s
+
+SMRDATA 00000388
+
+Symbol: SMRDATA
+   Definitions
+      At line 426 in file src\2440init.s
+   Uses
+      At line 246 in file src\2440init.s
+      At line 526 in file src\2440init.s
+
+StartPointAfterSleepWakeUp 000001A8
+
+Symbol: StartPointAfterSleepWakeUp
+   Definitions
+      At line 243 in file src\2440init.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 6 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 242 in file src\2440init.s
+Comment: StartPointAfterSleepWakeUp used once
+TopOfROM 000003C0
+
+Symbol: TopOfROM
+   Definitions
+      At line 450 in file src\2440init.s
+   Uses
+      At line 330 in file src\2440init.s
+      At line 332 in file src\2440init.s
+
+WAKEUP_SLEEP 00000454
+
+Symbol: WAKEUP_SLEEP
+   Definitions
+      At line 518 in file src\2440init.s
+   Uses
+      At line 240 in file src\2440init.s
+Comment: WAKEUP_SLEEP used once
+__ENTRY 00000000
+
+Symbol: __ENTRY
+   Definitions
+      At line 89 in file src\2440init.s
+   Uses
+      At line 88 in file src\2440init.s
+Comment: __ENTRY used once
+copy_proc_beg 00000268
+
+Symbol: copy_proc_beg
+   Definitions
+      At line 326 in file src\2440init.s
+   Uses
+      At line 313 in file src\2440init.s
+      At line 316 in file src\2440init.s
+      At line 324 in file src\2440init.s
+
+nand_boot_beg 00000260
+
+Symbol: nand_boot_beg
+   Definitions
+      At line 319 in file src\2440init.s
+   Uses
+      None
+Comment: nand_boot_beg unused
+41 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RamData 00000000
+
+Symbol: RamData
+   Definitions
+      At line 603 in file src\2440init.s
+   Uses
+      None
+Comment: RamData unused
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+ABORTMODE 00000017
+
+Symbol: ABORTMODE
+   Definitions
+      At line 19 in file src\2440init.s
+   Uses
+      At line 401 in file src\2440init.s
+Comment: ABORTMODE used once
+AbortStack 33FF6000
+
+Symbol: AbortStack
+   Definitions
+      At line 28 in file src\2440init.s
+   Uses
+      At line 403 in file src\2440init.s
+Comment: AbortStack used once
+B0_PMC 00000000
+
+Symbol: B0_PMC
+   Definitions
+      At line 45 in file .\inc\memcfg.inc
+   Uses
+      At line 434 in file src\2440init.s
+Comment: B0_PMC used once
+B0_Tacc 00000007
+
+Symbol: B0_Tacc
+   Definitions
+      At line 41 in file .\inc\memcfg.inc
+   Uses
+      At line 434 in file src\2440init.s
+Comment: B0_Tacc used once
+B0_Tacp 00000001
+
+Symbol: B0_Tacp
+   Definitions
+      At line 44 in file .\inc\memcfg.inc
+   Uses
+      At line 434 in file src\2440init.s
+Comment: B0_Tacp used once
+B0_Tacs 00000003
+
+Symbol: B0_Tacs
+   Definitions
+      At line 39 in file .\inc\memcfg.inc
+   Uses
+      At line 434 in file src\2440init.s
+Comment: B0_Tacs used once
+B0_Tah 00000003
+
+Symbol: B0_Tah
+   Definitions
+      At line 43 in file .\inc\memcfg.inc
+   Uses
+      At line 434 in file src\2440init.s
+Comment: B0_Tah used once
+B0_Tcoh 00000003
+
+Symbol: B0_Tcoh
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 42 in file .\inc\memcfg.inc
+   Uses
+      At line 434 in file src\2440init.s
+Comment: B0_Tcoh used once
+B0_Tcos 00000003
+
+Symbol: B0_Tcos
+   Definitions
+      At line 40 in file .\inc\memcfg.inc
+   Uses
+      At line 434 in file src\2440init.s
+Comment: B0_Tcos used once
+B1_BWSCON 00000001
+
+Symbol: B1_BWSCON
+   Definitions
+      At line 28 in file .\inc\memcfg.inc
+   Uses
+      At line 433 in file src\2440init.s
+Comment: B1_BWSCON used once
+B1_PMC 00000000
+
+Symbol: B1_PMC
+   Definitions
+      At line 54 in file .\inc\memcfg.inc
+   Uses
+      At line 435 in file src\2440init.s
+Comment: B1_PMC used once
+B1_Tacc 00000006
+
+Symbol: B1_Tacc
+   Definitions
+      At line 50 in file .\inc\memcfg.inc
+   Uses
+      At line 435 in file src\2440init.s
+Comment: B1_Tacc used once
+B1_Tacp 00000000
+
+Symbol: B1_Tacp
+   Definitions
+      At line 53 in file .\inc\memcfg.inc
+   Uses
+      At line 435 in file src\2440init.s
+Comment: B1_Tacp used once
+B1_Tacs 00000001
+
+Symbol: B1_Tacs
+   Definitions
+      At line 48 in file .\inc\memcfg.inc
+   Uses
+      At line 435 in file src\2440init.s
+Comment: B1_Tacs used once
+B1_Tah 00000001
+
+Symbol: B1_Tah
+   Definitions
+      At line 52 in file .\inc\memcfg.inc
+   Uses
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 435 in file src\2440init.s
+Comment: B1_Tah used once
+B1_Tcoh 00000001
+
+Symbol: B1_Tcoh
+   Definitions
+      At line 51 in file .\inc\memcfg.inc
+   Uses
+      At line 435 in file src\2440init.s
+Comment: B1_Tcoh used once
+B1_Tcos 00000001
+
+Symbol: B1_Tcos
+   Definitions
+      At line 49 in file .\inc\memcfg.inc
+   Uses
+      At line 435 in file src\2440init.s
+Comment: B1_Tcos used once
+B2_BWSCON 00000001
+
+Symbol: B2_BWSCON
+   Definitions
+      At line 29 in file .\inc\memcfg.inc
+   Uses
+      At line 433 in file src\2440init.s
+Comment: B2_BWSCON used once
+B2_PMC 00000000
+
+Symbol: B2_PMC
+   Definitions
+      At line 63 in file .\inc\memcfg.inc
+   Uses
+      At line 436 in file src\2440init.s
+Comment: B2_PMC used once
+B2_Tacc 00000006
+
+Symbol: B2_Tacc
+   Definitions
+      At line 59 in file .\inc\memcfg.inc
+   Uses
+      At line 436 in file src\2440init.s
+Comment: B2_Tacc used once
+B2_Tacp 00000000
+
+Symbol: B2_Tacp
+   Definitions
+      At line 62 in file .\inc\memcfg.inc
+   Uses
+      At line 436 in file src\2440init.s
+Comment: B2_Tacp used once
+B2_Tacs 00000001
+
+Symbol: B2_Tacs
+   Definitions
+      At line 57 in file .\inc\memcfg.inc
+   Uses
+      At line 436 in file src\2440init.s
+Comment: B2_Tacs used once
+B2_Tah 00000001
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: B2_Tah
+   Definitions
+      At line 61 in file .\inc\memcfg.inc
+   Uses
+      At line 436 in file src\2440init.s
+Comment: B2_Tah used once
+B2_Tcoh 00000001
+
+Symbol: B2_Tcoh
+   Definitions
+      At line 60 in file .\inc\memcfg.inc
+   Uses
+      At line 436 in file src\2440init.s
+Comment: B2_Tcoh used once
+B2_Tcos 00000001
+
+Symbol: B2_Tcos
+   Definitions
+      At line 58 in file .\inc\memcfg.inc
+   Uses
+      At line 436 in file src\2440init.s
+Comment: B2_Tcos used once
+B3_BWSCON 00000001
+
+Symbol: B3_BWSCON
+   Definitions
+      At line 30 in file .\inc\memcfg.inc
+   Uses
+      At line 433 in file src\2440init.s
+Comment: B3_BWSCON used once
+B3_PMC 00000000
+
+Symbol: B3_PMC
+   Definitions
+      At line 72 in file .\inc\memcfg.inc
+   Uses
+      At line 437 in file src\2440init.s
+Comment: B3_PMC used once
+B3_Tacc 00000006
+
+Symbol: B3_Tacc
+   Definitions
+      At line 68 in file .\inc\memcfg.inc
+   Uses
+      At line 437 in file src\2440init.s
+Comment: B3_Tacc used once
+B3_Tacp 00000000
+
+Symbol: B3_Tacp
+   Definitions
+      At line 71 in file .\inc\memcfg.inc
+   Uses
+      At line 437 in file src\2440init.s
+Comment: B3_Tacp used once
+B3_Tacs 00000001
+
+Symbol: B3_Tacs
+   Definitions
+
+
+
+ARM Macro Assembler    Page 5 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 66 in file .\inc\memcfg.inc
+   Uses
+      At line 437 in file src\2440init.s
+Comment: B3_Tacs used once
+B3_Tah 00000001
+
+Symbol: B3_Tah
+   Definitions
+      At line 70 in file .\inc\memcfg.inc
+   Uses
+      At line 437 in file src\2440init.s
+Comment: B3_Tah used once
+B3_Tcoh 00000001
+
+Symbol: B3_Tcoh
+   Definitions
+      At line 69 in file .\inc\memcfg.inc
+   Uses
+      At line 437 in file src\2440init.s
+Comment: B3_Tcoh used once
+B3_Tcos 00000001
+
+Symbol: B3_Tcos
+   Definitions
+      At line 67 in file .\inc\memcfg.inc
+   Uses
+      At line 437 in file src\2440init.s
+Comment: B3_Tcos used once
+B4_BWSCON 00000002
+
+Symbol: B4_BWSCON
+   Definitions
+      At line 31 in file .\inc\memcfg.inc
+   Uses
+      At line 433 in file src\2440init.s
+Comment: B4_BWSCON used once
+B4_PMC 00000000
+
+Symbol: B4_PMC
+   Definitions
+      At line 81 in file .\inc\memcfg.inc
+   Uses
+      At line 438 in file src\2440init.s
+Comment: B4_PMC used once
+B4_Tacc 00000006
+
+Symbol: B4_Tacc
+   Definitions
+      At line 77 in file .\inc\memcfg.inc
+   Uses
+      At line 438 in file src\2440init.s
+Comment: B4_Tacc used once
+B4_Tacp 00000000
+
+Symbol: B4_Tacp
+   Definitions
+      At line 80 in file .\inc\memcfg.inc
+   Uses
+      At line 438 in file src\2440init.s
+
+
+
+ARM Macro Assembler    Page 6 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: B4_Tacp used once
+B4_Tacs 00000001
+
+Symbol: B4_Tacs
+   Definitions
+      At line 75 in file .\inc\memcfg.inc
+   Uses
+      At line 438 in file src\2440init.s
+Comment: B4_Tacs used once
+B4_Tah 00000001
+
+Symbol: B4_Tah
+   Definitions
+      At line 79 in file .\inc\memcfg.inc
+   Uses
+      At line 438 in file src\2440init.s
+Comment: B4_Tah used once
+B4_Tcoh 00000001
+
+Symbol: B4_Tcoh
+   Definitions
+      At line 78 in file .\inc\memcfg.inc
+   Uses
+      At line 438 in file src\2440init.s
+Comment: B4_Tcoh used once
+B4_Tcos 00000001
+
+Symbol: B4_Tcos
+   Definitions
+      At line 76 in file .\inc\memcfg.inc
+   Uses
+      At line 438 in file src\2440init.s
+Comment: B4_Tcos used once
+B5_BWSCON 00000001
+
+Symbol: B5_BWSCON
+   Definitions
+      At line 32 in file .\inc\memcfg.inc
+   Uses
+      At line 433 in file src\2440init.s
+Comment: B5_BWSCON used once
+B5_PMC 00000000
+
+Symbol: B5_PMC
+   Definitions
+      At line 90 in file .\inc\memcfg.inc
+   Uses
+      At line 439 in file src\2440init.s
+Comment: B5_PMC used once
+B5_Tacc 00000006
+
+Symbol: B5_Tacc
+   Definitions
+      At line 86 in file .\inc\memcfg.inc
+   Uses
+      At line 439 in file src\2440init.s
+Comment: B5_Tacc used once
+B5_Tacp 00000000
+
+
+
+
+ARM Macro Assembler    Page 7 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: B5_Tacp
+   Definitions
+      At line 89 in file .\inc\memcfg.inc
+   Uses
+      At line 439 in file src\2440init.s
+Comment: B5_Tacp used once
+B5_Tacs 00000001
+
+Symbol: B5_Tacs
+   Definitions
+      At line 84 in file .\inc\memcfg.inc
+   Uses
+      At line 439 in file src\2440init.s
+Comment: B5_Tacs used once
+B5_Tah 00000001
+
+Symbol: B5_Tah
+   Definitions
+      At line 88 in file .\inc\memcfg.inc
+   Uses
+      At line 439 in file src\2440init.s
+Comment: B5_Tah used once
+B5_Tcoh 00000001
+
+Symbol: B5_Tcoh
+   Definitions
+      At line 87 in file .\inc\memcfg.inc
+   Uses
+      At line 439 in file src\2440init.s
+Comment: B5_Tcoh used once
+B5_Tcos 00000001
+
+Symbol: B5_Tcos
+   Definitions
+      At line 85 in file .\inc\memcfg.inc
+   Uses
+      At line 439 in file src\2440init.s
+Comment: B5_Tcos used once
+B6_BWSCON 00000002
+
+Symbol: B6_BWSCON
+   Definitions
+      At line 33 in file .\inc\memcfg.inc
+   Uses
+      At line 433 in file src\2440init.s
+Comment: B6_BWSCON used once
+B6_MT 00000003
+
+Symbol: B6_MT
+   Definitions
+      At line 94 in file .\inc\memcfg.inc
+   Uses
+      At line 440 in file src\2440init.s
+Comment: B6_MT used once
+B6_SCAN 00000001
+
+Symbol: B6_SCAN
+   Definitions
+      At line 96 in file .\inc\memcfg.inc
+
+
+
+ARM Macro Assembler    Page 8 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      At line 440 in file src\2440init.s
+Comment: B6_SCAN used once
+B6_Trcd 00000001
+
+Symbol: B6_Trcd
+   Definitions
+      At line 95 in file .\inc\memcfg.inc
+   Uses
+      At line 440 in file src\2440init.s
+Comment: B6_Trcd used once
+B7_BWSCON 00000002
+
+Symbol: B7_BWSCON
+   Definitions
+      At line 34 in file .\inc\memcfg.inc
+   Uses
+      At line 433 in file src\2440init.s
+Comment: B7_BWSCON used once
+B7_MT 00000003
+
+Symbol: B7_MT
+   Definitions
+      At line 99 in file .\inc\memcfg.inc
+   Uses
+      At line 441 in file src\2440init.s
+Comment: B7_MT used once
+B7_SCAN 00000001
+
+Symbol: B7_SCAN
+   Definitions
+      At line 101 in file .\inc\memcfg.inc
+   Uses
+      At line 441 in file src\2440init.s
+Comment: B7_SCAN used once
+B7_Trcd 00000001
+
+Symbol: B7_Trcd
+   Definitions
+      At line 100 in file .\inc\memcfg.inc
+   Uses
+      At line 441 in file src\2440init.s
+Comment: B7_Trcd used once
+BANKCON0 48000004
+
+Symbol: BANKCON0
+   Definitions
+      At line 14 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: BANKCON0 unused
+BANKCON1 48000008
+
+Symbol: BANKCON1
+   Definitions
+      At line 15 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: BANKCON1 unused
+
+
+
+ARM Macro Assembler    Page 9 Alphabetic symbol ordering
+Absolute symbols
+
+BANKCON2 4800000C
+
+Symbol: BANKCON2
+   Definitions
+      At line 16 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: BANKCON2 unused
+BANKCON3 48000010
+
+Symbol: BANKCON3
+   Definitions
+      At line 17 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: BANKCON3 unused
+BANKCON4 48000014
+
+Symbol: BANKCON4
+   Definitions
+      At line 18 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: BANKCON4 unused
+BANKCON5 48000018
+
+Symbol: BANKCON5
+   Definitions
+      At line 19 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: BANKCON5 unused
+BANKCON6 4800001C
+
+Symbol: BANKCON6
+   Definitions
+      At line 20 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: BANKCON6 unused
+BANKCON7 48000020
+
+Symbol: BANKCON7
+   Definitions
+      At line 21 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: BANKCON7 unused
+BANKSIZE 48000028
+
+Symbol: BANKSIZE
+   Definitions
+      At line 23 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: BANKSIZE unused
+BIT_SELFREFRESH 00400000
+
+Symbol: BIT_SELFREFRESH
+
+
+
+ARM Macro Assembler    Page 10 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 12 in file src\2440init.s
+   Uses
+      At line 474 in file src\2440init.s
+      At line 500 in file src\2440init.s
+
+BWSCON 48000000
+
+Symbol: BWSCON
+   Definitions
+      At line 13 in file .\inc\2440addr.inc
+   Uses
+      At line 247 in file src\2440init.s
+      At line 310 in file src\2440init.s
+      At line 527 in file src\2440init.s
+
+CLKCON 4C00000C
+
+Symbol: CLKCON
+   Definitions
+      At line 34 in file .\inc\2440addr.inc
+   Uses
+      At line 481 in file src\2440init.s
+      At line 512 in file src\2440init.s
+
+CLKDIVN 4C000014
+
+Symbol: CLKDIVN
+   Definitions
+      At line 36 in file .\inc\2440addr.inc
+   Uses
+      At line 203 in file src\2440init.s
+      At line 553 in file src\2440init.s
+      At line 577 in file src\2440init.s
+
+CLKDIV_VAL 00000005
+
+Symbol: CLKDIV_VAL
+   Definitions
+      At line 55 in file .\inc\option.inc
+   Uses
+      At line 204 in file src\2440init.s
+      At line 208 in file src\2440init.s
+
+CLKSLOW 4C000010
+
+Symbol: CLKSLOW
+   Definitions
+      At line 35 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: CLKSLOW unused
+DCKCON 56000084
+
+Symbol: DCKCON
+   Definitions
+      At line 61 in file .\inc\2440addr.inc
+   Uses
+      None
+
+
+
+ARM Macro Assembler    Page 11 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: DCKCON unused
+DW16 00000001
+
+Symbol: DW16
+   Definitions
+      At line 13 in file .\inc\memcfg.inc
+   Uses
+      At line 28 in file .\inc\memcfg.inc
+      At line 29 in file .\inc\memcfg.inc
+      At line 30 in file .\inc\memcfg.inc
+      At line 32 in file .\inc\memcfg.inc
+
+DW32 00000002
+
+Symbol: DW32
+   Definitions
+      At line 14 in file .\inc\memcfg.inc
+   Uses
+      At line 31 in file .\inc\memcfg.inc
+      At line 33 in file .\inc\memcfg.inc
+      At line 34 in file .\inc\memcfg.inc
+
+DW8 00000000
+
+Symbol: DW8
+   Definitions
+      At line 12 in file .\inc\memcfg.inc
+   Uses
+      None
+Comment: DW8 unused
+EINTFLT0 56000094
+
+Symbol: EINTFLT0
+   Definitions
+      At line 65 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: EINTFLT0 unused
+EINTFLT1 56000098
+
+Symbol: EINTFLT1
+   Definitions
+      At line 66 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: EINTFLT1 unused
+EINTFLT2 5600009C
+
+Symbol: EINTFLT2
+   Definitions
+      At line 67 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: EINTFLT2 unused
+EINTFLT3 560000A0
+
+Symbol: EINTFLT3
+   Definitions
+      At line 68 in file .\inc\2440addr.inc
+
+
+
+ARM Macro Assembler    Page 12 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      None
+Comment: EINTFLT3 unused
+EINTMASK 560000A4
+
+Symbol: EINTMASK
+   Definitions
+      At line 69 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: EINTMASK unused
+EINTPEND 560000A8
+
+Symbol: EINTPEND
+   Definitions
+      At line 70 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: EINTPEND unused
+EXTINT0 56000088
+
+Symbol: EXTINT0
+   Definitions
+      At line 62 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: EXTINT0 unused
+EXTINT1 5600008C
+
+Symbol: EXTINT1
+   Definitions
+      At line 63 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: EXTINT1 unused
+EXTINT2 56000090
+
+Symbol: EXTINT2
+   Definitions
+      At line 64 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: EXTINT2 unused
+FIQMODE 00000011
+
+Symbol: FIQMODE
+   Definitions
+      At line 16 in file src\2440init.s
+   Uses
+      At line 409 in file src\2440init.s
+Comment: FIQMODE used once
+FIQStack 33FF8000
+
+Symbol: FIQStack
+   Definitions
+      At line 30 in file src\2440init.s
+   Uses
+      At line 411 in file src\2440init.s
+Comment: FIQStack used once
+
+
+
+ARM Macro Assembler    Page 13 Alphabetic symbol ordering
+Absolute symbols
+
+GPFCON 56000050
+
+Symbol: GPFCON
+   Definitions
+      At line 55 in file .\inc\2440addr.inc
+   Uses
+      At line 261 in file src\2440init.s
+      At line 278 in file src\2440init.s
+
+GPFDAT 56000054
+
+Symbol: GPFDAT
+   Definitions
+      At line 56 in file .\inc\2440addr.inc
+   Uses
+      At line 268 in file src\2440init.s
+      At line 281 in file src\2440init.s
+
+GPFUP 56000058
+
+Symbol: GPFUP
+   Definitions
+      At line 57 in file .\inc\2440addr.inc
+   Uses
+      At line 264 in file src\2440init.s
+Comment: GPFUP used once
+GSTATUS0 560000AC
+
+Symbol: GSTATUS0
+   Definitions
+      At line 71 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: GSTATUS0 unused
+GSTATUS1 560000B0
+
+Symbol: GSTATUS1
+   Definitions
+      At line 72 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: GSTATUS1 unused
+GSTATUS2 560000B4
+
+Symbol: GSTATUS2
+   Definitions
+      At line 73 in file .\inc\2440addr.inc
+   Uses
+      At line 236 in file src\2440init.s
+Comment: GSTATUS2 used once
+GSTATUS3 560000B8
+
+Symbol: GSTATUS3
+   Definitions
+      At line 74 in file .\inc\2440addr.inc
+   Uses
+      At line 539 in file src\2440init.s
+Comment: GSTATUS3 used once
+GSTATUS4 560000BC
+
+
+
+ARM Macro Assembler    Page 14 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: GSTATUS4
+   Definitions
+      At line 75 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: GSTATUS4 unused
+HandleADC 33FFFF9C
+
+Symbol: HandleADC
+   Definitions
+      At line 651 in file src\2440init.s
+   Uses
+      None
+Comment: HandleADC unused
+HandleBATFLT 33FFFF3C
+
+Symbol: HandleBATFLT
+   Definitions
+      At line 626 in file src\2440init.s
+   Uses
+      None
+Comment: HandleBATFLT unused
+HandleCAM 33FFFF38
+
+Symbol: HandleCAM
+   Definitions
+      At line 625 in file src\2440init.s
+   Uses
+      None
+Comment: HandleCAM unused
+HandleDMA0 33FFFF64
+
+Symbol: HandleDMA0
+   Definitions
+      At line 637 in file src\2440init.s
+   Uses
+      None
+Comment: HandleDMA0 unused
+HandleDMA1 33FFFF68
+
+Symbol: HandleDMA1
+   Definitions
+      At line 638 in file src\2440init.s
+   Uses
+      None
+Comment: HandleDMA1 unused
+HandleDMA2 33FFFF6C
+
+Symbol: HandleDMA2
+   Definitions
+      At line 639 in file src\2440init.s
+   Uses
+      None
+Comment: HandleDMA2 unused
+HandleDMA3 33FFFF70
+
+Symbol: HandleDMA3
+   Definitions
+
+
+
+ARM Macro Assembler    Page 15 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 640 in file src\2440init.s
+   Uses
+      None
+Comment: HandleDMA3 unused
+HandleDabort 33FFFF10
+
+Symbol: HandleDabort
+   Definitions
+      At line 610 in file src\2440init.s
+   Uses
+      At line 65 in macro ¨ûþ
+      at line 150 in file src\2440init.s
+Comment: HandleDabort used once
+HandleEINT0 33FFFF20
+
+Symbol: HandleEINT0
+   Definitions
+      At line 619 in file src\2440init.s
+   Uses
+      At line 159 in file src\2440init.s
+Comment: HandleEINT0 used once
+HandleEINT1 33FFFF24
+
+Symbol: HandleEINT1
+   Definitions
+      At line 620 in file src\2440init.s
+   Uses
+      None
+Comment: HandleEINT1 unused
+HandleEINT2 33FFFF28
+
+Symbol: HandleEINT2
+   Definitions
+      At line 621 in file src\2440init.s
+   Uses
+      None
+Comment: HandleEINT2 unused
+HandleEINT3 33FFFF2C
+
+Symbol: HandleEINT3
+   Definitions
+      At line 622 in file src\2440init.s
+   Uses
+      None
+Comment: HandleEINT3 unused
+HandleEINT4_7 33FFFF30
+
+Symbol: HandleEINT4_7
+   Definitions
+      At line 623 in file src\2440init.s
+   Uses
+      None
+Comment: HandleEINT4_7 unused
+HandleEINT8_23 33FFFF34
+
+Symbol: HandleEINT8_23
+   Definitions
+      At line 624 in file src\2440init.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 16 Alphabetic symbol ordering
+Absolute symbols
+
+      None
+Comment: HandleEINT8_23 unused
+HandleFIQ 33FFFF1C
+
+Symbol: HandleFIQ
+   Definitions
+      At line 613 in file src\2440init.s
+   Uses
+      At line 65 in macro ¨ûþ
+      at line 146 in file src\2440init.s
+Comment: HandleFIQ used once
+HandleIIC 33FFFF8C
+
+Symbol: HandleIIC
+   Definitions
+      At line 647 in file src\2440init.s
+   Uses
+      None
+Comment: HandleIIC unused
+HandleIRQ 33FFFF18
+
+Symbol: HandleIRQ
+   Definitions
+      At line 612 in file src\2440init.s
+   Uses
+      At line 65 in macro ¨ûþ
+      at line 147 in file src\2440init.s
+      At line 370 in file src\2440init.s
+
+HandleLCD 33FFFF60
+
+Symbol: HandleLCD
+   Definitions
+      At line 636 in file src\2440init.s
+   Uses
+      None
+Comment: HandleLCD unused
+HandleMMC 33FFFF74
+
+Symbol: HandleMMC
+   Definitions
+      At line 641 in file src\2440init.s
+   Uses
+      None
+Comment: HandleMMC unused
+HandleNFCON 33FFFF80
+
+Symbol: HandleNFCON
+   Definitions
+      At line 644 in file src\2440init.s
+   Uses
+      None
+Comment: HandleNFCON unused
+HandlePabort 33FFFF0C
+
+Symbol: HandlePabort
+   Definitions
+      At line 609 in file src\2440init.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 17 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 65 in macro ¨ûþ
+      at line 151 in file src\2440init.s
+Comment: HandlePabort used once
+HandleRTC 33FFFF98
+
+Symbol: HandleRTC
+   Definitions
+      At line 650 in file src\2440init.s
+   Uses
+      None
+Comment: HandleRTC unused
+HandleReserved 33FFFF14
+
+Symbol: HandleReserved
+   Definitions
+      At line 611 in file src\2440init.s
+   Uses
+      None
+Comment: HandleReserved unused
+HandleReset 33FFFF00
+
+Symbol: HandleReset
+   Definitions
+      At line 606 in file src\2440init.s
+   Uses
+      None
+Comment: HandleReset unused
+HandleSPI0 33FFFF78
+
+Symbol: HandleSPI0
+   Definitions
+      At line 642 in file src\2440init.s
+   Uses
+      None
+Comment: HandleSPI0 unused
+HandleSPI1 33FFFF94
+
+Symbol: HandleSPI1
+   Definitions
+      At line 649 in file src\2440init.s
+   Uses
+      None
+Comment: HandleSPI1 unused
+HandleSWI 33FFFF08
+
+Symbol: HandleSWI
+   Definitions
+      At line 608 in file src\2440init.s
+   Uses
+      At line 65 in macro ¨ûþ
+      at line 149 in file src\2440init.s
+Comment: HandleSWI used once
+HandleTICK 33FFFF40
+
+Symbol: HandleTICK
+   Definitions
+      At line 627 in file src\2440init.s
+   Uses
+      None
+
+
+
+ARM Macro Assembler    Page 18 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: HandleTICK unused
+HandleTIMER0 33FFFF48
+
+Symbol: HandleTIMER0
+   Definitions
+      At line 629 in file src\2440init.s
+   Uses
+      None
+Comment: HandleTIMER0 unused
+HandleTIMER1 33FFFF4C
+
+Symbol: HandleTIMER1
+   Definitions
+      At line 630 in file src\2440init.s
+   Uses
+      None
+Comment: HandleTIMER1 unused
+HandleTIMER2 33FFFF50
+
+Symbol: HandleTIMER2
+   Definitions
+      At line 631 in file src\2440init.s
+   Uses
+      None
+Comment: HandleTIMER2 unused
+HandleTIMER3 33FFFF54
+
+Symbol: HandleTIMER3
+   Definitions
+      At line 632 in file src\2440init.s
+   Uses
+      None
+Comment: HandleTIMER3 unused
+HandleTIMER4 33FFFF58
+
+Symbol: HandleTIMER4
+   Definitions
+      At line 633 in file src\2440init.s
+   Uses
+      None
+Comment: HandleTIMER4 unused
+HandleUART0 33FFFF90
+
+Symbol: HandleUART0
+   Definitions
+      At line 648 in file src\2440init.s
+   Uses
+      None
+Comment: HandleUART0 unused
+HandleUART1 33FFFF7C
+
+Symbol: HandleUART1
+   Definitions
+      At line 643 in file src\2440init.s
+   Uses
+      None
+Comment: HandleUART1 unused
+HandleUART2 33FFFF5C
+
+
+
+
+ARM Macro Assembler    Page 19 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: HandleUART2
+   Definitions
+      At line 634 in file src\2440init.s
+   Uses
+      None
+Comment: HandleUART2 unused
+HandleUSBD 33FFFF84
+
+Symbol: HandleUSBD
+   Definitions
+      At line 645 in file src\2440init.s
+   Uses
+      None
+Comment: HandleUSBD unused
+HandleUSBH 33FFFF88
+
+Symbol: HandleUSBH
+   Definitions
+      At line 646 in file src\2440init.s
+   Uses
+      None
+Comment: HandleUSBH unused
+HandleUndef 33FFFF04
+
+Symbol: HandleUndef
+   Definitions
+      At line 607 in file src\2440init.s
+   Uses
+      At line 65 in macro ¨ûþ
+      at line 148 in file src\2440init.s
+Comment: HandleUndef used once
+HandleWDT 33FFFF44
+
+Symbol: HandleWDT
+   Definitions
+      At line 628 in file src\2440init.s
+   Uses
+      None
+Comment: HandleWDT unused
+INTMOD 4A000004
+
+Symbol: INTMOD
+   Definitions
+      At line 43 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: INTMOD unused
+INTMSK 4A000008
+
+Symbol: INTMSK
+   Definitions
+      At line 44 in file .\inc\2440addr.inc
+   Uses
+      At line 176 in file src\2440init.s
+Comment: INTMSK used once
+INTOFFSET 4A000014
+
+Symbol: INTOFFSET
+   Definitions
+
+
+
+ARM Macro Assembler    Page 20 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 47 in file .\inc\2440addr.inc
+   Uses
+      At line 157 in file src\2440init.s
+Comment: INTOFFSET used once
+INTPND 4A000010
+
+Symbol: INTPND
+   Definitions
+      At line 46 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: INTPND unused
+INTSUBMSK 4A00001C
+
+Symbol: INTSUBMSK
+   Definitions
+      At line 49 in file .\inc\2440addr.inc
+   Uses
+      At line 180 in file src\2440init.s
+Comment: INTSUBMSK used once
+IRQMODE 00000012
+
+Symbol: IRQMODE
+   Definitions
+      At line 17 in file src\2440init.s
+   Uses
+      At line 405 in file src\2440init.s
+Comment: IRQMODE used once
+IRQStack 33FF7000
+
+Symbol: IRQStack
+   Definitions
+      At line 29 in file src\2440init.s
+   Uses
+      At line 407 in file src\2440init.s
+Comment: IRQStack used once
+LOCKTIME 4C000000
+
+Symbol: LOCKTIME
+   Definitions
+      At line 31 in file .\inc\2440addr.inc
+   Uses
+      At line 196 in file src\2440init.s
+Comment: LOCKTIME used once
+MISCCR 56000080
+
+Symbol: MISCCR
+   Definitions
+      At line 60 in file .\inc\2440addr.inc
+   Uses
+      At line 507 in file src\2440init.s
+      At line 520 in file src\2440init.s
+
+MODEMASK 0000001F
+
+Symbol: MODEMASK
+   Definitions
+      At line 21 in file src\2440init.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 21 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 396 in file src\2440init.s
+      At line 413 in file src\2440init.s
+
+MPLLCON 4C000004
+
+Symbol: MPLLCON
+   Definitions
+      At line 32 in file .\inc\2440addr.inc
+   Uses
+      At line 230 in file src\2440init.s
+Comment: MPLLCON used once
+MRSRB6 4800002C
+
+Symbol: MRSRB6
+   Definitions
+      At line 24 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: MRSRB6 unused
+MRSRB7 48000030
+
+Symbol: MRSRB7
+   Definitions
+      At line 25 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: MRSRB7 unused
+MSLCON 560000CC
+
+Symbol: MSLCON
+   Definitions
+      At line 78 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: MSLCON unused
+M_MDIV 0000005C
+
+Symbol: M_MDIV
+   Definitions
+      At line 102 in file .\inc\option.inc
+   Uses
+      At line 231 in file src\2440init.s
+Comment: M_MDIV used once
+M_PDIV 00000001
+
+Symbol: M_PDIV
+   Definitions
+      At line 103 in file .\inc\option.inc
+   Uses
+      At line 231 in file src\2440init.s
+Comment: M_PDIV used once
+M_SDIV 00000001
+
+Symbol: M_SDIV
+   Definitions
+      At line 105 in file .\inc\option.inc
+   Uses
+      At line 231 in file src\2440init.s
+Comment: M_SDIV used once
+
+
+
+ARM Macro Assembler    Page 22 Alphabetic symbol ordering
+Absolute symbols
+
+NFADDR 4E00000C
+
+Symbol: NFADDR
+   Definitions
+      At line 93 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFADDR unused
+NFCMD 4E000008
+
+Symbol: NFCMD
+   Definitions
+      At line 92 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFCMD unused
+NFCONF 4E000000
+
+Symbol: NFCONF
+   Definitions
+      At line 90 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFCONF unused
+NFCONT 4E000004
+
+Symbol: NFCONT
+   Definitions
+      At line 91 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFCONT unused
+NFDATA 4E000010
+
+Symbol: NFDATA
+   Definitions
+      At line 94 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFDATA unused
+NFDATA8 4E000010
+
+Symbol: NFDATA8
+   Definitions
+      At line 95 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFDATA8 unused
+NFEBLK 4E00003C
+
+Symbol: NFEBLK
+   Definitions
+      At line 106 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFEBLK unused
+NFESTAT0 4E000024
+
+Symbol: NFESTAT0
+
+
+
+ARM Macro Assembler    Page 23 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 100 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFESTAT0 unused
+NFESTAT1 4E000028
+
+Symbol: NFESTAT1
+   Definitions
+      At line 101 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFESTAT1 unused
+NFMECC0 4E00002C
+
+Symbol: NFMECC0
+   Definitions
+      At line 102 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFMECC0 unused
+NFMECC1 4E000030
+
+Symbol: NFMECC1
+   Definitions
+      At line 103 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFMECC1 unused
+NFMECCD0 4E000014
+
+Symbol: NFMECCD0
+   Definitions
+      At line 96 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFMECCD0 unused
+NFMECCD1 4E000018
+
+Symbol: NFMECCD1
+   Definitions
+      At line 97 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFMECCD1 unused
+NFSBLK 4E000038
+
+Symbol: NFSBLK
+   Definitions
+      At line 105 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFSBLK unused
+NFSECC 4E000034
+
+Symbol: NFSECC
+   Definitions
+      At line 104 in file .\inc\2440addr.inc
+   Uses
+
+
+
+ARM Macro Assembler    Page 24 Alphabetic symbol ordering
+Absolute symbols
+
+      None
+Comment: NFSECC unused
+NFSECCD 4E00001C
+
+Symbol: NFSECCD
+   Definitions
+      At line 98 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFSECCD unused
+NFSTAT 4E000020
+
+Symbol: NFSTAT
+   Definitions
+      At line 99 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: NFSTAT unused
+NOINT 000000C0
+
+Symbol: NOINT
+   Definitions
+      At line 22 in file src\2440init.s
+   Uses
+      At line 397 in file src\2440init.s
+      At line 401 in file src\2440init.s
+      At line 405 in file src\2440init.s
+      At line 409 in file src\2440init.s
+      At line 413 in file src\2440init.s
+
+PRIORITY 4A00000C
+
+Symbol: PRIORITY
+   Definitions
+      At line 45 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: PRIORITY unused
+REFCNT 000004F4
+
+Symbol: REFCNT
+   Definitions
+      At line 109 in file .\inc\memcfg.inc
+   Uses
+      At line 442 in file src\2440init.s
+Comment: REFCNT used once
+REFEN 00000001
+
+Symbol: REFEN
+   Definitions
+      At line 104 in file .\inc\memcfg.inc
+   Uses
+      At line 442 in file src\2440init.s
+Comment: REFEN used once
+REFRESH 48000024
+
+Symbol: REFRESH
+   Definitions
+      At line 22 in file .\inc\2440addr.inc
+
+
+
+ARM Macro Assembler    Page 25 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      At line 471 in file src\2440init.s
+      At line 489 in file src\2440init.s
+      At line 498 in file src\2440init.s
+      At line 563 in file src\2440init.s
+      At line 587 in file src\2440init.s
+
+SRCPND 4A000000
+
+Symbol: SRCPND
+   Definitions
+      At line 42 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: SRCPND unused
+SUSSRCPND 4A000018
+
+Symbol: SUSSRCPND
+   Definitions
+      At line 48 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: SUSSRCPND unused
+SVCMODE 00000013
+
+Symbol: SVCMODE
+   Definitions
+      At line 18 in file src\2440init.s
+   Uses
+      At line 414 in file src\2440init.s
+Comment: SVCMODE used once
+SVCStack 33FF5800
+
+Symbol: SVCStack
+   Definitions
+      At line 26 in file src\2440init.s
+   Uses
+      At line 416 in file src\2440init.s
+Comment: SVCStack used once
+TREFMD 00000000
+
+Symbol: TREFMD
+   Definitions
+      At line 105 in file .\inc\memcfg.inc
+   Uses
+      At line 442 in file src\2440init.s
+Comment: TREFMD used once
+Tchr 00000002
+
+Symbol: Tchr
+   Definitions
+      At line 108 in file .\inc\memcfg.inc
+   Uses
+      At line 442 in file src\2440init.s
+Comment: Tchr used once
+Trp 00000001
+
+Symbol: Trp
+   Definitions
+
+
+
+ARM Macro Assembler    Page 26 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 106 in file .\inc\memcfg.inc
+   Uses
+      At line 442 in file src\2440init.s
+Comment: Trp used once
+Tsrc 00000001
+
+Symbol: Tsrc
+   Definitions
+      At line 107 in file .\inc\memcfg.inc
+   Uses
+      At line 442 in file src\2440init.s
+Comment: Tsrc used once
+UBLB 00000008
+
+Symbol: UBLB
+   Definitions
+      At line 16 in file .\inc\memcfg.inc
+   Uses
+      None
+Comment: UBLB unused
+UNDEFMODE 0000001B
+
+Symbol: UNDEFMODE
+   Definitions
+      At line 20 in file src\2440init.s
+   Uses
+      At line 397 in file src\2440init.s
+Comment: UNDEFMODE used once
+UPLLCON 4C000008
+
+Symbol: UPLLCON
+   Definitions
+      At line 33 in file .\inc\2440addr.inc
+   Uses
+      At line 219 in file src\2440init.s
+Comment: UPLLCON used once
+USERMODE 00000010
+
+Symbol: USERMODE
+   Definitions
+      At line 15 in file src\2440init.s
+   Uses
+      None
+Comment: USERMODE unused
+U_MDIV 00000038
+
+Symbol: U_MDIV
+   Definitions
+      At line 112 in file .\inc\option.inc
+   Uses
+      At line 220 in file src\2440init.s
+Comment: U_MDIV used once
+U_PDIV 00000002
+
+Symbol: U_PDIV
+   Definitions
+      At line 113 in file .\inc\option.inc
+   Uses
+      At line 220 in file src\2440init.s
+
+
+
+ARM Macro Assembler    Page 27 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: U_PDIV used once
+U_SDIV 00000002
+
+Symbol: U_SDIV
+   Definitions
+      At line 115 in file .\inc\option.inc
+   Uses
+      At line 220 in file src\2440init.s
+Comment: U_SDIV used once
+UndefStack 33FF5C00
+
+Symbol: UndefStack
+   Definitions
+      At line 27 in file src\2440init.s
+   Uses
+      At line 399 in file src\2440init.s
+Comment: UndefStack used once
+UserStack 33FF4800
+
+Symbol: UserStack
+   Definitions
+      At line 25 in file src\2440init.s
+   Uses
+      None
+Comment: UserStack unused
+WAIT 00000004
+
+Symbol: WAIT
+   Definitions
+      At line 15 in file .\inc\memcfg.inc
+   Uses
+      None
+Comment: WAIT unused
+WTCNT 53000008
+
+Symbol: WTCNT
+   Definitions
+      At line 85 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: WTCNT unused
+WTCON 53000000
+
+Symbol: WTCON
+   Definitions
+      At line 83 in file .\inc\2440addr.inc
+   Uses
+      At line 172 in file src\2440init.s
+Comment: WTCON used once
+WTDAT 53000004
+
+Symbol: WTDAT
+   Definitions
+      At line 84 in file .\inc\2440addr.inc
+   Uses
+      None
+Comment: WTDAT unused
+_ISR_STARTADDRESS 33FFFF00
+
+
+
+
+ARM Macro Assembler    Page 28 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: _ISR_STARTADDRESS
+   Definitions
+      At line 9 in file .\inc\option.inc
+   Uses
+      At line 605 in file src\2440init.s
+Comment: _ISR_STARTADDRESS used once
+_MMUTT_STARTADDRESS 33FF8000
+
+Symbol: _MMUTT_STARTADDRESS
+   Definitions
+      At line 8 in file .\inc\option.inc
+   Uses
+      None
+Comment: _MMUTT_STARTADDRESS unused
+_STACK_BASEADDRESS 33FF8000
+
+Symbol: _STACK_BASEADDRESS
+   Definitions
+      At line 7 in file .\inc\option.inc
+   Uses
+      At line 25 in file src\2440init.s
+      At line 26 in file src\2440init.s
+      At line 27 in file src\2440init.s
+      At line 28 in file src\2440init.s
+      At line 29 in file src\2440init.s
+      At line 30 in file src\2440init.s
+
+198 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+Image$$ER_ROM1$$RO$$Base 00000000
+
+Symbol: Image$$ER_ROM1$$RO$$Base
+   Definitions
+      At line 71 in file src\2440init.s
+   Uses
+      At line 449 in file src\2440init.s
+Comment: Image$$ER_ROM1$$RO$$Base used once
+Image$$ER_ROM1$$RO$$Limit 00000000
+
+Symbol: Image$$ER_ROM1$$RO$$Limit
+   Definitions
+      At line 72 in file src\2440init.s
+   Uses
+      At line 450 in file src\2440init.s
+Comment: Image$$ER_ROM1$$RO$$Limit used once
+Image$$RW_RAM1$$RW$$Base 00000000
+
+Symbol: Image$$RW_RAM1$$RW$$Base
+   Definitions
+      At line 73 in file src\2440init.s
+   Uses
+      At line 451 in file src\2440init.s
+Comment: Image$$RW_RAM1$$RW$$Base used once
+Image$$RW_RAM1$$ZI$$Base 00000000
+
+Symbol: Image$$RW_RAM1$$ZI$$Base
+   Definitions
+      At line 74 in file src\2440init.s
+   Uses
+      At line 452 in file src\2440init.s
+Comment: Image$$RW_RAM1$$ZI$$Base used once
+Image$$RW_RAM1$$ZI$$Limit 00000000
+
+Symbol: Image$$RW_RAM1$$ZI$$Limit
+   Definitions
+      At line 75 in file src\2440init.s
+   Uses
+      At line 453 in file src\2440init.s
+Comment: Image$$RW_RAM1$$ZI$$Limit used once
+MMU_SetAsyncBusMode 00000000
+
+Symbol: MMU_SetAsyncBusMode
+   Definitions
+      At line 77 in file src\2440init.s
+   Uses
+      None
+Comment: MMU_SetAsyncBusMode unused
+MMU_SetFastBusMode 00000000
+
+Symbol: MMU_SetFastBusMode
+   Definitions
+      At line 78 in file src\2440init.s
+   Uses
+      None
+Comment: MMU_SetFastBusMode unused
+Main 00000000
+
+Symbol: Main
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+External symbols
+
+   Definitions
+      At line 80 in file src\2440init.s
+   Uses
+      At line 376 in file src\2440init.s
+Comment: Main used once
+RdNF2SDRAM 00000000
+
+Symbol: RdNF2SDRAM
+   Definitions
+      At line 81 in file src\2440init.s
+   Uses
+      At line 321 in file src\2440init.s
+Comment: RdNF2SDRAM used once
+9 symbols
+588 symbols in table

@@ -1,0 +1,1 @@
+-c --cpu ARM920T -g -O0 -I.\inc -I..\..\m4toarm -I.\fatfs -I "C:\Keil\ARM\CMSIS\Include" -I "C:\Keil\ARM\INC\Samsung" -o ".\output\displaybmp.o" --omf_browse ".\output\displaybmp.crf" --depend ".\output\displaybmp.d" "src\DisplayBmp.c"

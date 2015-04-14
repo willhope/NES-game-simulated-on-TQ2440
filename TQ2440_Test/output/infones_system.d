@@ -1,0 +1,10 @@
+.\output\infones_system.o: src\InfoNES_system.c
+.\output\infones_system.o: ..\..\m4toarm\InfoNES.h
+.\output\infones_system.o: ..\..\m4toarm\InfoNES_Types.h
+.\output\infones_system.o: .\inc\def.h
+.\output\infones_system.o: C:\Keil\ARM\RV31\INC\string.h
+.\output\infones_system.o: C:\Keil\ARM\RV31\INC\stdio.h
+.\output\infones_system.o: .\inc\LCD_TFT.h
+.\output\infones_system.o: .\fatfs\ff.h
+.\output\infones_system.o: .\fatfs\ffconf.h
+.\output\infones_system.o: .\inc\2440lib.h

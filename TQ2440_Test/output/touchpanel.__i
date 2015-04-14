@@ -1,0 +1,1 @@
+-c --cpu ARM920T -g -O0 -I.\inc -I..\..\m4toarm -I.\fatfs -I "C:\Keil\ARM\CMSIS\Include" -I "C:\Keil\ARM\INC\Samsung" -o ".\output\touchpanel.o" --omf_browse ".\output\touchpanel.crf" --depend ".\output\touchpanel.d" "src\Touchpanel.c"

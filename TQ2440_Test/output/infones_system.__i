@@ -1,0 +1,1 @@
+-c --cpu ARM920T -g -O0 -I.\inc -I..\..\m4toarm -I.\fatfs -I "C:\Keil\ARM\CMSIS\Include" -I "C:\Keil\ARM\INC\Samsung" -o ".\output\infones_system.o" --omf_browse ".\output\infones_system.crf" --depend ".\output\infones_system.d" "src\InfoNES_system.c"

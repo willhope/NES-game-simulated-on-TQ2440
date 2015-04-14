@@ -1,0 +1,191 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+F:\embeded\m4toarm\TQ2440_Test\TQ2440_Test.uvproj
+Project File Date:  04/09/2014
+
+<h2>Output:</h2>
+Build target 'ram_or_nand'
+compiling Main.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+..\..\m4toarm\InfoNES_System.h(32): warning:  #1295-D: Deprecated declaration InfoNES_Menu - give arg types
+..\..\m4toarm\InfoNES_System.h(39): warning:  #1295-D: Deprecated declaration InfoNES_ReleaseRom - give arg types
+..\..\m4toarm\InfoNES_System.h(62): warning:  #1295-D: Deprecated declaration InfoNES_Wait - give arg types
+src\Main.c(304): warning:  #223-D: function "Glib_logo" declared implicitly
+src\Main.c(306): warning:  #223-D: function "Lcd_ClearScr" declared implicitly
+src\Main.c(307): warning:  #223-D: function "Glib_Buttom2" declared implicitly
+src\Main.c(313): warning:  #223-D: function "ReadMenuKey" declared implicitly
+src\Main.c(314): warning:  #223-D: function "process_key" declared implicitly
+src\Main.c(315): warning:  #223-D: function "display_menu" declared implicitly
+src\Main.c(192): warning:  #550-D: variable "mode" was set but never used
+src\Main.c(197): warning:  #177-D: variable "fsrc" was declared but never referenced
+src\Main.c(357): warning:  #223-D: function "sprintf" declared implicitly
+src\Main.c(390): warning:  #188-D: enumerated type mixed with another type
+src\Main.c(99): warning:  #550-D: variable "cpu_freq" was set but never used
+assembling 2440init.s...
+src\2440init.s(397): warning: A1876W: Use of '|' as a synonym for the :OR: operator is deprecated.
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271384 RO-data=442760 RW-data=3847660 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 21 Warning(s).
+Build target 'ram_or_nand'
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271384 RO-data=442760 RW-data=3847660 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 1 Warning(s).
+Build target 'ram_or_nand'
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271384 RO-data=442760 RW-data=3847660 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 1 Warning(s).
+Build target 'ram_or_nand'
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271384 RO-data=442760 RW-data=3847660 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 1 Warning(s).
+Build target 'ram_or_nand'
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271384 RO-data=442760 RW-data=3847660 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 1 Warning(s).
+Build target 'ram_or_nand'
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271384 RO-data=442760 RW-data=3847660 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 1 Warning(s).
+Build target 'ram_or_nand'
+compiling 2440lib.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+src\2440lib.c(562): warning:  #177-D: variable "i" was declared but never referenced
+src\2440lib.c(625): warning:  #177-D: variable "i" was declared but never referenced
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271436 RO-data=442760 RW-data=3847660 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 8 Warning(s).
+Build target 'ram_or_nand'
+compiling 2440lib.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+src\2440lib.c(562): warning:  #177-D: variable "i" was declared but never referenced
+src\2440lib.c(626): warning:  #177-D: variable "i" was declared but never referenced
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271416 RO-data=442760 RW-data=3847660 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 8 Warning(s).
+Build target 'ram_or_nand'
+compiling 2440lib.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+src\2440lib.c(562): warning:  #177-D: variable "i" was declared but never referenced
+src\2440lib.c(626): warning:  #177-D: variable "i" was declared but never referenced
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271412 RO-data=442760 RW-data=3847660 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 8 Warning(s).
+Build target 'ram_or_nand'
+compiling 2440lib.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+src\2440lib.c(562): warning:  #177-D: variable "i" was declared but never referenced
+src\2440lib.c(626): warning:  #177-D: variable "i" was declared but never referenced
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271384 RO-data=442760 RW-data=3847660 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 8 Warning(s).
+Build target 'ram_or_nand'
+compiling Main.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+..\..\m4toarm\InfoNES_System.h(32): warning:  #1295-D: Deprecated declaration InfoNES_Menu - give arg types
+..\..\m4toarm\InfoNES_System.h(39): warning:  #1295-D: Deprecated declaration InfoNES_ReleaseRom - give arg types
+..\..\m4toarm\InfoNES_System.h(62): warning:  #1295-D: Deprecated declaration InfoNES_Wait - give arg types
+src\Main.c(244): warning:  #223-D: function "Uart0_irq_init" declared implicitly
+src\Main.c(304): warning:  #223-D: function "Glib_logo" declared implicitly
+src\Main.c(306): warning:  #223-D: function "Lcd_ClearScr" declared implicitly
+src\Main.c(307): warning:  #223-D: function "Glib_Buttom2" declared implicitly
+src\Main.c(313): warning:  #223-D: function "ReadMenuKey" declared implicitly
+src\Main.c(314): warning:  #223-D: function "process_key" declared implicitly
+src\Main.c(315): warning:  #223-D: function "display_menu" declared implicitly
+src\Main.c(192): warning:  #550-D: variable "mode" was set but never used
+src\Main.c(197): warning:  #177-D: variable "fsrc" was declared but never referenced
+src\Main.c(357): warning:  #223-D: function "sprintf" declared implicitly
+src\Main.c(390): warning:  #188-D: enumerated type mixed with another type
+src\Main.c(99): warning:  #550-D: variable "cpu_freq" was set but never used
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271388 RO-data=442760 RW-data=3847660 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 21 Warning(s).
+Build target 'ram_or_nand'
+compiling 2440lib.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+src\2440lib.c(563): warning:  #177-D: variable "i" was declared but never referenced
+src\2440lib.c(627): warning:  #177-D: variable "i" was declared but never referenced
+compiling InfoNES_system.c...
+src\InfoNES_system.c(142): warning:  #513-D: a value of type "char *" cannot be assigned to an entity of type "BYTE *"
+src\InfoNES_system.c(148): warning:  #513-D: a value of type "char *" cannot be assigned to an entity of type "BYTE *"
+src\InfoNES_system.c(193): warning:  #167-D: argument of type "unsigned char *" is incompatible with parameter of type "char *"
+src\InfoNES_system.c(205): warning:  #223-D: function "Lcd_ClearScr" declared implicitly
+src\InfoNES_system.c(206): warning:  #223-D: function "Glib_Buttom" declared implicitly
+src\InfoNES_system.c(293): warning:  #177-D: variable "buf" was declared but never referenced
+src\InfoNES_system.c(294): warning:  #177-D: variable "i" was declared but never referenced
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271424 RO-data=442760 RW-data=3847664 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 15 Warning(s).
+Build target 'ram_or_nand'
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=271424 RO-data=442760 RW-data=3847664 ZI-data=819468  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 1 Warning(s).

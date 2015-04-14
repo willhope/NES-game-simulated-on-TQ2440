@@ -1,0 +1,46 @@
+*** Creating Trace Output File '.\output\TQ2440_Test.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '".\output\uda1341.o"'
+### List of Objects: adding '".\output\sd_mmc.o"'
+### List of Objects: adding '".\output\profile.o"'
+### List of Objects: adding '".\output\nand.o"'
+### List of Objects: adding '".\output\mmu.o"'
+### List of Objects: adding '".\output\memtest.o"'
+### List of Objects: adding '".\output\main.o"'
+### List of Objects: adding '".\output\lcd_tft.o"'
+### List of Objects: adding '".\output\keyscan.o"'
+### List of Objects: adding '".\output\dma.o"'
+### List of Objects: adding '".\output\audiodrv.o"'
+### List of Objects: adding '".\output\adc.o"'
+### List of Objects: adding '".\output\2440slib.o"'
+### List of Objects: adding '".\output\2440lib.o"'
+### List of Objects: adding '".\output\2440init.o"'
+### List of Objects: adding '".\output\infones_system.o"'
+### List of Objects: adding '".\output\picture.o"'
+### List of Objects: adding '".\output\touchpanel.o"'
+### List of Objects: adding '".\output\menu.o"'
+### List of Objects: adding '".\output\font_libs.o"'
+### List of Objects: adding '".\output\displaybmp.o"'
+### List of Objects: adding '".\output\infones.o"'
+### List of Objects: adding '".\output\infones_mapper.o"'
+### List of Objects: adding '".\output\infones_papu.o"'
+### List of Objects: adding '".\output\k6502.o"'
+### List of Objects: adding '".\output\diskio.o"'
+### List of Objects: adding '".\output\ff.o"'
+### List of Objects: adding '".\output\cc936.o"'
+### ADS-LD Command completed:
+--cpu ARM920T ".\output\uda1341.o" ".\output\sd_mmc.o" ".\output\profile.o" ".\output\nand.o" ".\output\mmu.o" ".\output\memtest.o" ".\output\main.o" ".\output\lcd_tft.o" ".\output\keyscan.o" ".\output\dma.o" ".\output\audiodrv.o" ".\output\adc.o" ".\output\2440slib.o" ".\output\2440lib.o" ".\output\2440init.o" ".\output\infones_system.o" ".\output\picture.o" ".\output\touchpanel.o" ".\output\menu.o" ".\output\font_libs.o" ".\output\displaybmp.o" ".\output\infones.o" ".\output\infones_mapper.o" ".\output\infones_papu.o" ".\output\k6502.o" ".\output\diskio.o" ".\output\ff.o" ".\output\cc936.o" --strict --scatter ".\output\TQ2440_Test.sct" 
+--sort=CallTree --autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\listing\TQ2440_Test.map" -o ".\output\TQ2440_Test.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: '.\output\TQ2440_Test.axf'
+### ADS-LD Command File: '.\output\TQ2440_Test.lnp'
+### Checking for dirty Components...
+### Creating CmdFile '.\output\TQ2440_Test.lnp', Handle=0x00000134
+### Writing '.lnp' file
+### ADS-LD Command file '.\output\TQ2440_Test.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

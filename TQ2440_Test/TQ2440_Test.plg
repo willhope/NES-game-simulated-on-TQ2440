@@ -1,0 +1,335 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+D:\Library\Documemts\MyCodeLib\MCU\KeilARM\TQ2440_Test\TQ2440_Test.uvproj
+Project File Date:  12/27/2011
+
+<h2>Output:</h2>
+Build target 'ram_or_nand'
+compiling UDA1341.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\AudioDrv.h(152): warning:  #1-D: last line of file ends without a newline
+compiling TQ_LOGO.c...
+compiling Touchpanel.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+src\Touchpanel.c(30): warning:  #61-D: integer operation result is out of range
+src\Touchpanel.c(38): warning:  #61-D: integer operation result is out of range
+src\Touchpanel.c(38): warning:  #68-D: integer conversion resulted in a change of sign
+src\Touchpanel.c(65): warning:  #61-D: integer operation result is out of range
+src\Touchpanel.c(65): warning:  #68-D: integer conversion resulted in a change of sign
+src\Touchpanel.c(72): warning:  #61-D: integer operation result is out of range
+src\Touchpanel.c(74): warning:  #61-D: integer operation result is out of range
+src\Touchpanel.c(94): warning:  #61-D: integer operation result is out of range
+compiling Test_OV9650.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+compiling SD_MMC.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(34): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(40): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(931): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(931): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(931): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(931): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(931): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(931): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(931): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(931): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(932): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(932): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(932): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(932): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(932): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(932): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(932): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(932): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(992): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(992): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(992): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(992): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(992): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(992): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(992): warning:  #870-D: invalid multibyte character sequence
+src\SD_MMC.c(992): warning:  #870-D: invalid multibyte character sequence
+compiling RTC.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+compiling profile.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+src\profile.c(36): warning:  #177-D: variable "divider" was declared but never referenced
+compiling Pic.c...
+src\Pic.c(43458): warning:  #1-D: last line of file ends without a newline
+compiling nand.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+src\nand.c(36): warning:  #550-D: variable "pMID" was set but never used
+src\nand.c(38): warning:  #550-D: variable "nBuff" was set but never used
+src\nand.c(39): warning:  #550-D: variable "n4thcycle" was set but never used
+compiling mmu.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+compiling memtest.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+compiling Main.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+src\Main.c(156): warning:  #550-D: variable "mode" was set but never used
+src\Main.c(71): warning:  #550-D: variable "cpu_freq" was set but never used
+compiling LCD_TFT.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+compiling keyscan.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+compiling IrDA.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+compiling IIC.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+compiling eeprom.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+src\eeprom.c(58): warning:  #177-D: function "seek_iic_device" was declared but never referenced
+compiling dma.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+.\inc\dma.h(80): warning:  #1-D: last line of file ends without a newline
+src\dma.c(230): warning:  #68-D: integer conversion resulted in a change of sign
+src\dma.c(232): warning:  #68-D: integer conversion resulted in a change of sign
+src\dma.c(247): warning:  #68-D: integer conversion resulted in a change of sign
+src\dma.c(249): warning:  #68-D: integer conversion resulted in a change of sign
+src\dma.c(264): warning:  #68-D: integer conversion resulted in a change of sign
+src\dma.c(266): warning:  #68-D: integer conversion resulted in a change of sign
+src\dma.c(270): warning:  #1-D: last line of file ends without a newline
+compiling camproset.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+src\camproset.c(104): warning:  #61-D: integer operation result is out of range
+src\camproset.c(104): warning:  #61-D: integer operation result is out of range
+src\camproset.c(104): warning:  #68-D: integer conversion resulted in a change of sign
+compiling camif.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+src\camif.c(126): warning:  #61-D: integer operation result is out of range
+src\camif.c(126): warning:  #68-D: integer conversion resulted in a change of sign
+src\camif.c(128): warning:  #61-D: integer operation result is out of range
+src\camif.c(203): warning:  #61-D: integer operation result is out of range
+src\camif.c(240): warning:  #61-D: integer operation result is out of range
+src\camif.c(287): warning:  #61-D: integer operation result is out of range
+src\camif.c(401): warning:  #61-D: integer operation result is out of range
+src\camif.c(401): warning:  #68-D: integer conversion resulted in a change of sign
+src\camif.c(403): warning:  #61-D: integer operation result is out of range
+src\camif.c(403): warning:  #68-D: integer conversion resulted in a change of sign
+src\camif.c(406): warning:  #61-D: integer operation result is out of range
+src\camif.c(406): warning:  #68-D: integer conversion resulted in a change of sign
+src\camif.c(422): warning:  #61-D: integer operation result is out of range
+src\camif.c(432): warning:  #61-D: integer operation result is out of range
+src\camif.c(441): warning:  #550-D: variable "completedFrameIndex" was set but never used
+compiling AudioDrv.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\AudioDrv.h(152): warning:  #1-D: last line of file ends without a newline
+.\inc\dma.h(80): warning:  #1-D: last line of file ends without a newline
+src\AudioDrv.c(682): warning:  #1-D: last line of file ends without a newline
+compiling Adc.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+assembling 2440slib.s...
+compiling 2440lib.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+assembling 2440init.s...
+linking...
+.\output\TQ2440_Test.sct(7): error: L6236E: No section matches selector - no section to be FIRST/LAST.
+".\output\TQ2440_Test.axf" - 1 Error(s), 193 Warning(s).
+Build target 'ram_or_nand'
+linking...
+.\output\TQ2440_Test.sct(7): error: L6236E: No section matches selector - no section to be FIRST/LAST.
+".\output\TQ2440_Test.axf" - 1 Error(s), 0 Warning(s).
+Build target 'ram_or_nand'
+assembling 2440init.s...
+linking...
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$RW$$Limit (referred from main.o).
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$RO$$Base (referred from 2440init.o).
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$RO$$Limit (referred from 2440init.o).
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$RW$$Base (referred from 2440init.o).
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$ZI$$Base (referred from 2440init.o).
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$ZI$$Limit (referred from 2440init.o).
+Target not created
+Build target 'ram_or_nand'
+linking...
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$RW$$Limit (referred from main.o).
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$RO$$Base (referred from 2440init.o).
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$RO$$Limit (referred from 2440init.o).
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$RW$$Base (referred from 2440init.o).
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$ZI$$Base (referred from 2440init.o).
+.\output\TQ2440_Test.axf: Error: L6218E: Undefined symbol Image$$ZI$$Limit (referred from 2440init.o).
+Target not created
+Build target 'ram_or_nand'
+assembling 2440init.s...
+src\2440init.s(71): error: A1207E: Bad or unknown attribute
+src\2440init.s(72): error: A1207E: Bad or unknown attribute
+src\2440init.s(73): error: A1207E: Bad or unknown attribute
+src\2440init.s(74): error: A1207E: Bad or unknown attribute
+src\2440init.s(75): error: A1207E: Bad or unknown attribute
+Target not created
+Build target 'ram_or_nand'
+compiling Main.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+src\Main.c(156): warning:  #550-D: variable "mode" was set but never used
+src\Main.c(71): warning:  #550-D: variable "cpu_freq" was set but never used
+compiling 2440lib.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+assembling 2440init.s...
+src\2440init.s(71): error: A1163E: Unknown opcode |Image$$ER_ROM1$$RO$$Base| , expecting opcode or Macro
+src\2440init.s(72): error: A1163E: Unknown opcode |Image$$ER_ROM1$$RO$$Limit| , expecting opcode or Macro
+src\2440init.s(73): error: A1163E: Unknown opcode |Image$$RW_RAM1$$RW$$Base| , expecting opcode or Macro
+src\2440init.s(74): error: A1163E: Unknown opcode |Image$$RW_RAM1$$ZI$$Base| , expecting opcode or Macro
+src\2440init.s(75): error: A1163E: Unknown opcode |Image$$RW_RAM1$$ZI$$Limit| , expecting opcode or Macro
+Target not created
+Build target 'ram_or_nand'
+assembling 2440init.s...
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=49972 RO-data=924 RW-data=398548 ZI-data=160472  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 1 Warning(s).
+Build target 'ram_or_nand'
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=49972 RO-data=924 RW-data=398548 ZI-data=160472  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 1 Warning(s).
+Build target 'ram_or_nand'
+compiling TQ_LOGO.c...
+compiling Pic.c...
+src\Pic.c(43458): warning:  #1-D: last line of file ends without a newline
+compiling LCD_TFT.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+.\inc\2440slib.h(63): warning:  #1-D: last line of file ends without a newline
+compiling camif.c...
+.\inc\2440addr.h(677): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(677): warning:  #550-D: variable "i" was set but never used
+.\inc\2440addr.h(685): warning:  #260-D: explicit type is missing ("int" assumed)
+.\inc\2440addr.h(685): warning:  #550-D: variable "i" was set but never used
+src\camif.c(126): warning:  #61-D: integer operation result is out of range
+src\camif.c(126): warning:  #68-D: integer conversion resulted in a change of sign
+src\camif.c(128): warning:  #61-D: integer operation result is out of range
+src\camif.c(203): warning:  #61-D: integer operation result is out of range
+src\camif.c(240): warning:  #61-D: integer operation result is out of range
+src\camif.c(287): warning:  #61-D: integer operation result is out of range
+src\camif.c(401): warning:  #61-D: integer operation result is out of range
+src\camif.c(401): warning:  #68-D: integer conversion resulted in a change of sign
+src\camif.c(403): warning:  #61-D: integer operation result is out of range
+src\camif.c(403): warning:  #68-D: integer conversion resulted in a change of sign
+src\camif.c(406): warning:  #61-D: integer operation result is out of range
+src\camif.c(406): warning:  #68-D: integer conversion resulted in a change of sign
+src\camif.c(422): warning:  #61-D: integer operation result is out of range
+src\camif.c(432): warning:  #61-D: integer operation result is out of range
+src\camif.c(441): warning:  #550-D: variable "completedFrameIndex" was set but never used
+linking...
+.\output\TQ2440_Test.sct(8): warning: L6314W: No section matches pattern *(InRoot$$Sections).
+Program Size: Code=49940 RO-data=924 RW-data=506068 ZI-data=267992  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bin -o TQ2440_Test.bin output/TQ2440_Test.axf
+".\output\TQ2440_Test.axf" - 0 Error(s), 26 Warning(s).

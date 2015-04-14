@@ -1,0 +1,1 @@
+--cpu ARM920T -g -I.\inc -I "C:\Keil\ARM\CMSIS\Include" -I "C:\Keil\ARM\INC\Samsung" --list ".\listing\2440init.lst" --xref -o ".\output\2440init.o" --depend ".\output\2440init.d" "src\2440init.s"
